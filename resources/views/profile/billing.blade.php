@@ -1,0 +1,120 @@
+@extends('admin')
+@section('content')
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <p>Billing Details</p>
+            </div>
+            <section class="content">
+                @if ($billing->consumer)
+                    <div class="container-fluid border border-black w-50" id="print_content">
+                        <h3 class="text-center mt-4">Payment Details</h3>
+                        <div class="wrapper m-4">
+                            @php
+                                $reading_date = Carbon\Carbon::parse($billing->reading_date);
+                                $due_date = Carbon\Carbon::parse($billing->due_date);
+                                $after_due_date = $reading_date->greaterThan($due_date);
+                            @endphp
+
+                            <div class="d-flex justify-content-between mx-5">
+                                <span class="font-weight-bold">Bill No.</span>
+                                <span class="font-weight-bolder">{{ sprintf('%07d', $billing->id) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5">
+                                <span class="font-weight-bold">Date Created</span>
+                                <span class="font-weight-bolder">{{ $reading_date->format('F j, Y g:i A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5">
+                                <span class="font-weight-bold">Due Date</span>
+                                <span class="font-weight-bolder">{{ $due_date->format('F j, Y g:i A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5">
+                                <span class="font-weight-bold">Acount No.</span>
+                                <span class="font-weight-bolder">{{ sprintf('%07d', $billing->consumer->id) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Account Name</span>
+                                <span class="font-weight-bolder">{{ $billing->consumer->first_name }}
+                                    {{ $billing->consumer->last_name }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Meter Code</span>
+                                <span class="font-weight-bolder">{{ $billing->consumer->meter_code }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Previous</span>
+                                <span class="font-weight-bolder">{{ $billing->previos }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Current</span>
+                                <span class="font-weight-bolder">{{ $billing->current }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Total Consumption</span>
+                                <span class="font-weight-bolder">{{ $billing->total_consumption }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Water Bill</span>
+                                <span class="font-weight-bolder">{{ $billing->price }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Others</span>
+                                <span class="font-weight-bolder">{{ $billing->source_charges }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Total Amount Due</span>
+                                <span class="font-weight-bolder">{{ $billing->total }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Total Amount After Due</span>
+                                <span class="font-weight-bolder">{{ $billing->after_due }}</span>
+                            </div>
+
+                            @if ($billing->status === 'PENDING')
+                                <form method="POST" action="/billing/pay/{{ $billing->id }}">
+                                    @csrf
+                                    <div class="form-group">
+                                        <input type="number" class="form-control" id="total" min="0"
+                                            value="{{ $billing->total }}" hidden readonly>
+                                        <label for="money">Money</label>
+                                        <input type="number" class="form-control" id="money" name="money"
+                                            value="{{ old('money') }}"
+                                            min="{{ $after_due_date ? round($billing->after_due) : round($billing->total) }}">
+                                        @error('money')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="change">Change</label>
+                                        <input type="number" class="form-control" id="change" name="change"
+                                            min="0" value="{{ old('change') }}" min="0" readonly>
+                                        @error('change')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            @else
+                                <div class="d-flex justify-content-between mx-5 my">
+                                    <span class="font-weight-bold">Money</span>
+                                    <span class="font-weight-bolder">{{ $billing->money }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mx-5 my">
+                                    <span class="font-weight-bold">Grand Total</span>
+                                    <span class="font-weight-bolder">{{ $billing->change }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @else
+                    <h2>Deleted Consumer</h2>
+                @endif
+            </section>
+            @if ($billing->consumer)
+                <a href="/billing/print/{{ $billing->id }}" class="btn btn-info" id="printBtn">Preview Print</a>
+                <a href="/admin/consumer/{{ $billing->consumer->id }}" class="btn btn-default" id="printBtn">Back</a>
+            @endif
+
+        </section>
+    </div>
+@endsection
