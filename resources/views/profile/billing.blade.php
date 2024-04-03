@@ -58,8 +58,12 @@
                                 <span class="font-weight-bolder">{{ $billing->price }}</span>
                             </div>
                             <div class="d-flex justify-content-between mx-5 my">
-                                <span class="font-weight-bold">Others</span>
-                                <span class="font-weight-bolder">{{ $billing->source_charges }}</span>
+                                <span class="font-weight-bold">Source Charge</span>
+                                <span class="font-weight-bolder">20</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5 my">
+                                <span class="font-weight-bold">Penalty</span>
+                                <span class="font-weight-bolder">50</span>
                             </div>
                             <div class="d-flex justify-content-between mx-5 my">
                                 <span class="font-weight-bold">Total Amount Due</span>
@@ -112,7 +116,7 @@
             </section>
             @if ($billing->consumer)
                 <a href="/billing/print/{{ $billing->id }}" class="btn btn-info" id="printBtn">Preview Print</a>
-                <a href="/admin/consumer/{{ $billing->consumer->id }}" class="btn btn-default" id="printBtn">Back</a>
+                <a href="/consumer/{{ $billing->consumer->id }}" class="btn btn-default" id="printBtn">Back</a>
             @endif
 
         </section>

@@ -29,7 +29,7 @@
         flex-direction: row
     }
 
-    #printBtn {
+    .printBtn {
         margin-top: 12px;
         cursor: pointer;
         outline: 0;
@@ -45,12 +45,9 @@
         transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         color: #0d6efd;
         border-color: #0d6efd;
-
-
-
     }
 
-    #printBtn:hover {
+    .printBtn:hover {
         color: #fff;
         background-color: #0d6efd;
         border-color: #0d6efd;
@@ -101,6 +98,12 @@
         border-top: 2px solid black;
         padding: 18px 0;
         margin-bottom: 0;
+    }
+
+    #printBtn {
+        position: absolute;
+        right: 14px;
+        top: 14px;
     }
 
     .consumption .payment_info,
@@ -179,8 +182,8 @@
                         <span class="payment_info">{{ $billing->price }}</span>
                     </div>
                     <div class="payment-details">
-                        <span class="payment_title">Others</span>
-                        <span class="payment_info">{{ $billing->source_charges }}</span>
+                        <span class="payment_title">Source Charge</span>
+                        <span class="payment_info">20</span>
                     </div>
                     <div class="payment-details">
                         <span class="payment_title">Total Amount Due</span>
@@ -188,7 +191,7 @@
                     </div>
                     <div class="payment-details">
                         <span class="payment_title">Penalty After Due</span>
-                        <span class="payment_info">20</span>
+                        <span class="payment_info">50</span>
                     </div>
                     <div class="payment-details"
                         style="border-bottom: 2px solid black; padding-bottom: 8px; margin-bottom: 12px">
@@ -210,15 +213,17 @@
             </div>
         </section>
     @endif
-    <button id="printBtn" onclick="window.print()">Print</button>
-    @auth
-        @if (auth()->user()->status == 0)
-            <a href="/billing/{{ $billing->id }}" id="back">Back</a>
-        @else
-            <a href="/consumer/{{ $billing->consumer_id }}"id="back">Back</a>
-        @endif
+    <div id="printBtn">
+        <button onclick="window.print()" class="printBtn">Print</button>
+        @auth
+            @if (auth()->user()->status == 0)
+                <a href="/billing/{{ $billing->id }}" id="back">Back</a>
+            @else
+                <a href="/consumer/{{ $billing->consumer_id }}"id="back">Back</a>
+            @endif
+        @endauth
+    </div>
 
-    @endauth
 </body>
 
 </html>

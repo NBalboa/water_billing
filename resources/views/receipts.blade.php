@@ -68,6 +68,12 @@
         margin-bottom: 8px
     }
 
+    .printBtn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+    }
+
     #back {
 
         display: inline-block;
@@ -120,6 +126,10 @@
 
         #back {
             display: none
+        }
+
+        .printBtn {
+            display: none;
         }
     }
 </style>
@@ -187,8 +197,8 @@
                             <span class="payment_info">{{ $billing->price }}</span>
                         </div>
                         <div class="payment-details">
-                            <span class="payment_title">Others</span>
-                            <span class="payment_info">{{ $billing->source_charges }}</span>
+                            <span class="payment_title">Source Charge</span>
+                            <span class="payment_info">20</span>
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Total Amount Due</span>
@@ -196,7 +206,7 @@
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Penalty After Due</span>
-                            <span class="payment_info">20</span>
+                            <span class="payment_info">50</span>
                         </div>
                         <div class="payment-details"
                             style="border-bottom: 2px solid black; padding-bottom: 8px; margin-bottom: 12px">
@@ -219,8 +229,11 @@
             </section>
         @endif
     @endforeach
-    <a href="/all/billings/" id="back">Back</a>
-    <button id="printBtn" onclick="window.print()">Print</button>
+    <div class="printBtn">
+        <a href="/all/billings/" id="back">Back</a>
+        <button id="printBtn" onclick="window.print()">Print</button>
+    </div>
+
 </body>
 
 </html>

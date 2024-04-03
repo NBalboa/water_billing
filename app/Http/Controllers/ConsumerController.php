@@ -54,14 +54,12 @@ class ConsumerController extends Controller
             'phone_no' => ['required'],
             'street' => ['required'],
             'provinces' => ['required'],
-            'municipalities' => ['required'],
-            'barangays' => ['required'],
         ]);
 
 
         $consumer->update($attributes);
 
-        return redirect("admin/consumer");
+        return redirect("/consumer");
     }
 
     public function store()
@@ -78,12 +76,10 @@ class ConsumerController extends Controller
             'phone_no' => ['required'],
             'street' => ['required'],
             'provinces' => ['required'],
-            'municipalities' => ['required'],
-            'barangays' => ['required'],
         ]);
 
         $attributes['meter_code'] = $meterCode;
-        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['barangays']}, {$attributes['municipalities']}, {$attributes['provinces']}");
+        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['provinces']}");
 
 
         Consumer::create($attributes);
