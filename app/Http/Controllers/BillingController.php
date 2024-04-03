@@ -212,7 +212,7 @@ class BillingController extends Controller
 
         $currentDateTime = Carbon::now();
         $dueDateTime = $currentDateTime->addDays(7);
-        $penalty = 20;
+        $penalty = 50;
 
         $attributes = request()->validate([
             'previos' => ['required'],
@@ -220,14 +220,12 @@ class BillingController extends Controller
             'total_consumption' => ['required'],
             'price' => ['required'],
             'total' => ['required'],
-            'source_charges' => ['required'],
         ]);
 
 
 
         $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
         $dueDateTime = Carbon::now()->addDays(7)->setTimezone('Asia/Manila');
-        $penalty = 20;
         $attributes['after_due'] = $attributes['total'] + $penalty;
         $attributes['reading_date'] = $currentDateTime;
         $attributes['due_date'] = $dueDateTime;

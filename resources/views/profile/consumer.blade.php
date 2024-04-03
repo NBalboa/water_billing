@@ -51,7 +51,6 @@
                                     <th>Total Consumtion</th>
                                     <th>Status</th>
                                     <th>Water Bill</th>
-                                    <th>Others</th>
                                     <th>After Due</th>
                                     <th>Grand Total</th>
                                     <th>Action</th>
@@ -77,7 +76,6 @@
                                             <td>{{ $billing->total_consumption }}</td>
                                             <td>{{ $billing->status }}</td>
                                             <td><strong>₱ </strong>{{ $billing->price }}</td>
-                                            <td>{{ $billing->source_charges }}</td>
                                             <td><strong>₱ </strong>{{ $billing->after_due }}</td>
                                             <td><strong>₱ </strong>{{ $billing->total }}</td>
                                             <td>
@@ -165,16 +163,6 @@
                                                 <p class="text-danger">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <label for="source_charges">Others</label>
-                                            <input type="number" class="form-control" min="0" id="source_charges"
-                                                name="source_charges" placeholder="Source Charges" disabled
-                                                value="{{ old('source_charges') }}">
-                                            @error('source_charges')
-                                                <p class="text-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-
                                         <div class="form-group">
                                             <label for="total">Grand Total</label>
                                             <input type="number" class="form-control" id="total" name="total"

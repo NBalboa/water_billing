@@ -26,7 +26,8 @@
                         <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
                     @endauth
                     @guest
-                        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" type="button" data-bs-target="#login"
+                                data-bs-toggle="modal">Login</a></li>
                     @endguest
                 </ul>
             </div>
@@ -61,6 +62,37 @@
                         class="icon ion-social-twitter"></i></a></div>
         </div>
     </footer>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="login">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Login</h4><button class="btn-close" type="button" aria-label="Close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/login">
+                        @csrf
+
+                        <div class="text-center"><img class="mb-3" src="assets/img/image1.png" width="80"></div>
+                        <div class="mb-3">
+                            <label class="form-label" for="name">Username</label>
+                            @error('username')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                            <input class="form-control item" type="text" name="username">
+                        </div>
+                        <div class="mb-3"><label class="form-label" for="subject">Password</label><input
+                                class="form-control item" type="password" name="password"></div>
+                        <div class="mb-3"><button class="btn btn-primary btn-lg d-block w-100"
+                                type="submit">Login</button></div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" type="button"
+                        data-bs-dismiss="modal">Close</button></div>
+            </div>
+        </div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

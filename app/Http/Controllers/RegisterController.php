@@ -33,12 +33,10 @@ class RegisterController extends Controller
             // 'address' => 'required',
             'street' => ['required'],
             'provinces' => ['required'],
-            'municipalities' => ['required'],
-            'barangays' => ['required'],
             'phone_no' => 'required|max:11',
             'confirm_password' => ['required', 'min:7', 'same:password'],
         ]);
-        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['barangays']}, {$attributes['municipalities']}, {$attributes['provinces']}");
+        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['provinces']}");
         // $attributes['address'] = "{$attributes['street']} {$attributes['barangays']} {$attributes['municipalities']} {$attributes['provinces']}";
         $attributes['status'] = 0; //Admin
         $attributes['password'] = bcrypt($attributes['password']);
@@ -64,12 +62,10 @@ class RegisterController extends Controller
             // 'address' => 'required',
             'street' => ['required'],
             'provinces' => ['required'],
-            'municipalities' => ['required'],
-            'barangays' => ['required'],
             'phone_no' => 'required|max:11',
             'confirm_password' => ['required', 'min:7', 'same:password'],
         ]);
-        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['barangays']}, {$attributes['municipalities']}, {$attributes['provinces']}");
+        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['provinces']}");
 
         // $attributes['address'] = "{$attributes['street']} {$attributes['barangays']} {$attributes['municipalities']} {$attributes['provinces']}";
         $attributes['status'] = 1; //Collector

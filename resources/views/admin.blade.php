@@ -31,6 +31,15 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars"></i></a>
                 </li>
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <form class="nav-link" method="POST" action="/logout">
+                        @csrf
+                        <input type="submit" value="Logout" class="nav_link btn btn-link" />
+                    </form>
+                </li>
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -111,17 +120,13 @@
                                     </a>
                                 </li>
                             @endif
-                            <li class="nav-item">
-                                <form class="nav-link" method="POST" action="/logout">
-                                    @csrf
-                                    <input type="submit" value="Logout" class="nav_link btn btn-warning" />
-                                </form>
-                            </li>
+
                         @endauth
                 </nav>
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
+
         </aside>
         @yield('content')
     </div>

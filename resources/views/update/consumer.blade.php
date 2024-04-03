@@ -50,22 +50,13 @@
                                 @error('street')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
-                                <select class="custom-select rounded-0 " name="provinces" id="provinces">
-                                    <option value="{{ $trim_address[3] }}">{{ $trim_address[3] }}</option>
+                                <select class="custom-select rounded-0 " name="provinces">
+                                    <option value="{{ $trim_address[1] }}">{{ $trim_address[1] }}</option>
+                                    <option value="Barangay Kapatagan">Barangay Kapatagan</option>
+                                    <option value="Barangay Biu-os">Barangay Biu-os</option>
+                                    <option value="Barangay Danan">Barangay Danan</option>
                                 </select>
                                 @error('provinces')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                                <select class="custom-select rounded-0 my-4" name="municipalities" id="municipalities">
-                                    <option value="{{ $trim_address[2] }}">{{ $trim_address[2] }}</option>
-                                </select>
-                                @error('municipalities')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                                <select class="custom-select rounded-0" name="barangays" id="barangays">
-                                    <option value="{{ $trim_address[1] }}">{{ $trim_address[1] }}</option>
-                                </select>
-                                @error('barangays')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>

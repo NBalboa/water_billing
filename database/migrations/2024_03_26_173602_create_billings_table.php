@@ -20,7 +20,6 @@ return new class extends Migration
             $table->integer('current');
             $table->integer('total_consumption');
             $table->string('status'); //PENDING, //PAID
-            $table->decimal('source_charges');
             $table->decimal('price'); //Water Bill
             $table->decimal('total'); //Grand Total
             $table->decimal('after_due');

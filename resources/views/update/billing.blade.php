@@ -50,14 +50,6 @@
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label for="source_charges">Others</label>
-                            <input type="number" class="form-control" min="0" id="source_charges"
-                                name="source_charges" placeholder="Source Charges" value="{{ $billing->source_charges }}">
-                            @error('source_charges')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
 
                         <div class="form-group">
                             <label for="total">Grand Total</label>

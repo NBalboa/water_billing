@@ -12,10 +12,12 @@
                     <table class="table table-hover text-nowrap">
                         <thead>
                             <tr>
+                                <th>Username</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Phone No.</th>
                                 <th>Address</th>
+                                <th>Role</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -27,24 +29,29 @@
                             @else
                                 {{-- <p>Not Empty</p> --}}
                                 @foreach ($users as $user)
-                                    <tr>
-                                        <td>{{ $user->first_name }} </td>
-                                        <td>{{ $user->last_name }}</td>
-                                        <td>{{ $user->phone_no }}</td>
-                                        <td>{{ $user->address }}</td>
-                                        <td>
+                                    @if (auth()->user()->id !== $user->id)
+                                        <tr>
+                                            <td>{{ $user->username }} </td>
+                                            <td>{{ $user->first_name }} </td>
+                                            <td>{{ $user->last_name }}</td>
+                                            <td>{{ $user->phone_no }}</td>
+                                            <td>{{ $user->address }}</td>
+                                            <td>{{ $user->status === 0 ? 'Admin' : 'Collector' }}</td>
+                                            <td>
 
-                                            @auth
-                                                @if (auth()->user()->status == 0)
-                                                    <form action="/user/delete/{{ $user->id }}" method="POST"
-                                                        style="display: inline-block">
-                                                        @csrf
-                                                        <button class="btn btn-danger" type="submit">Delete</button>
-                                                    </form>
-                                                    <a href="/user/edit/{{ $user->id }}" class="btn btn-default">Edit</a>
-                                                @endif
-                                            @endauth
-                                    </tr>
+                                                @auth
+                                                    @if (auth()->user()->status == 0)
+                                                        <form action="/user/delete/{{ $user->id }}" method="POST"
+                                                            style="display: inline-block">
+                                                            @csrf
+                                                            <button class="btn btn-danger" type="submit">Delete</button>
+                                                        </form>
+                                                        <a href="/user/edit/{{ $user->id }}"
+                                                            class="btn btn-default">Edit</a>
+                                                    @endif
+                                                @endauth
+                                        </tr>
+                                    @endif
                                 @endforeach
                             @endif
                         </tbody>

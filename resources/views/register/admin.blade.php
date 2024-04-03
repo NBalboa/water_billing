@@ -56,24 +56,16 @@
                             @error('street')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
-                            <select class="custom-select rounded-0 " name="provinces" id="provinces">
-                                <option value="">Select Provinces</option>
+                            <select class="custom-select rounded-0 " name="provinces">
+                                <option value="">Select Barangay</option>
+                                <option value="Barangay Kapatagan">Barangay Kapatagan</option>
+                                <option value="Barangay Biu-os">Barangay Biu-os</option>
+                                <option value="Barangay Danan">Barangay Danan</option>
                             </select>
                             @error('provinces')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
-                            <select class="custom-select rounded-0 my-4" name="municipalities" id="municipalities">
-                                <option value="">Select Municipalities</option>
-                            </select>
-                            @error('municipalities')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
-                            <select class="custom-select rounded-0" name="barangays" id="barangays">
-                                <option value="">Select Barangay</option>
-                            </select>
-                            @error('barangays')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
+
                         </div>
                         <div class="form-group">
                             <label for="phone_no">Phone No.</label>

@@ -16,7 +16,7 @@ use App\Models\Consumer;
 
 Route::get('/', function () {
     return view('welcome');
-})->middleware('guest');
+});
 
 // TODOS
 
@@ -25,7 +25,7 @@ Route::get('/', function () {
 // change password by admin or owner
 
 
-Route::get('login', [LoginController::class, 'create'])->name('login')->middleware('guest');
+// Route::get('login', [LoginController::class, 'create'])->name('login')->middleware('guest');
 Route::post('login', [LoginController::class, 'login'])->middleware('guest');
 
 Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
@@ -55,6 +55,8 @@ Route::middleware([AdminOnly::class, 'auth'])->group(function () {
 
     Route::get('user/edit/{id}', [UserController::class, 'showEdit'])->whereNumber('id');
     Route::get('admin/users', [UserController::class, 'all']);
+    Route::post('user/edit/{id}', [UserController::class, 'edit'])->whereNumber('id');
+    Route::post('user/delete/{id}', [UserController::class, 'delete'])->whereNumber('id');
 
     Route::get('billing/{billing_id}', [BillingController::class, 'billing']);
 

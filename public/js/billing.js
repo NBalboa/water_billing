@@ -1,26 +1,21 @@
 $(document).ready(function () {
-    const waterRates = 36.86;
+    const waterRates = 20;
 
     $("#current").on("input", function () {
         const current = parseInt($(this).val());
         const previos = parseInt($("#previos").val());
 
-        // const source_charges = parseInt($("#source_charges").val());
-
         if (!isNaN(current - previos)) {
             const total_consumption = current - previos;
             $("#total_consumption").val(total_consumption);
             $("#price").val((total_consumption * waterRates).toFixed(2));
-
-            $("#source_charges").removeAttr("disabled");
+            $("#total").val((total_consumption * waterRates).toFixed(2));
         }
 
         if (isNaN(current)) {
             $("#total_consumption").val("");
             $("#price").val("");
-            $("#source_charges").val("");
             $("#total").val("");
-            $("#source_charges").attr("disabled", "");
         }
     });
 
