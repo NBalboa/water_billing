@@ -64,12 +64,27 @@
                         <div class="form-group">
                             <label for="status">Status</label>
                             <select class="custom-select rounded-0 " name="status">
-                                <option value="{{ $user->status == 0 ? 0 : 1 }}">
-                                    {{ $user->status == 0 ? 'Admin' : 'Collector' }}</option>
+                                @if ($user->status == 0)
+                                    <option value="0">Admin</option>
+                                @else
+                                    @if ($user->status == 1)
+                                        <option value="1">Collector</option>
+                                    @else
+                                        <option value="2">Cashier</option>
+                                    @endif
+                                @endif
+
                                 @if ($user->status == 0)
                                     <option value="1">Colllector</option>
+                                    <option value="2">Cashier</option>
                                 @else
-                                    <option value="0">Admin</option>
+                                    @if ($user->status == 1)
+                                        <option value="0">Admin</option>
+                                        <option value="2">Cashier</option>
+                                    @else
+                                        <option value="0">Admin</option>
+                                        <option value="1">Collector</option>
+                                    @endif
                                 @endif
                             </select>
                             @error('status')

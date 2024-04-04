@@ -63,22 +63,24 @@
                             @endif
                         </li>
                         @auth
-                            <li class="nav-item">
-                                <a href="/home" class="nav-link">
-                                    <i class="nav-icon fas fa-columns"></i>
-                                    <p>
-                                        Dashboard
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/all/billings" class="nav-link">
-                                    <i class="nav-icon fas fa-columns"></i>
-                                    <p>
-                                        Billings
-                                    </p>
-                                </a>
-                            </li>
+                            @if (auth()->user()->status == 0)
+                                <li class="nav-item">
+                                    <a href="/home" class="nav-link">
+                                        <i class="nav-icon fas fa-columns"></i>
+                                        <p>
+                                            Dashboard
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/all/billings" class="nav-link">
+                                        <i class="nav-icon fas fa-columns"></i>
+                                        <p>
+                                            Reports
+                                        </p>
+                                    </a>
+                                </li>
+                            @endif
                             <li class="nav-item">
                                 <a href="/consumer" class="nav-link">
                                     <i class="nav-icon fas fa-columns"></i>
@@ -97,16 +99,22 @@
                                         </p>
                                     </a>
                                     <ul class="nav nav-treeview" style="display: block;">
-                                        <li class="nav-item">
+                                        {{-- <li class="nav-item">
                                             <a href="/admin/register/admin" class="nav-link">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Admin</p>
                                             </a>
-                                        </li>
+                                        </li> --}}
                                         <li class="nav-item">
                                             <a href="/admin/register/collector" class="nav-link">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Collector</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="/admin/register/cashier" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Cashier</p>
                                             </a>
                                         </li>
                                     </ul>

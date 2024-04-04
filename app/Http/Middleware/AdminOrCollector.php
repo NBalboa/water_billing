@@ -16,7 +16,7 @@ class AdminOrCollector
     public function handle(Request $request, Closure $next): Response
     {
 
-        if (!auth()->check() || (auth()->user()?->status != 0 && auth()->user()?->status != 1)) {
+        if (!auth()->check() || (auth()->user()?->status != 0 && auth()->user()?->status != 1 && auth()->user()?->status != 2)) {
             abort(Response::HTTP_FORBIDDEN);
         }
         return $next($request);

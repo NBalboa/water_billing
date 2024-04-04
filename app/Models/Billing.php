@@ -21,7 +21,8 @@ class Billing extends Model
         'status',
         'price',
         'source_charges',
-        'total'
+        'total',
+        'paid_at'
     ];
 
     public static function getYears()

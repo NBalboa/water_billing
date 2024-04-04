@@ -187,11 +187,6 @@
                             <span class="payment_title">Total Consumption</span>
                             <span class="payment_info">{{ $billing->total_consumption }}</span>
                         </div>
-
-                        <div class="payment-details" style="margin-top: 24px">
-                            <span class="payment_title">Status</span>
-                            <span class="payment_info">{{ $billing->status == 'PENDING' ? 'PENDING' : 'PAID' }}</span>
-                        </div>
                         <div class="payment-details">
                             <span class="payment_title">Water Bill</span>
                             <span class="payment_info">{{ $billing->price }}</span>

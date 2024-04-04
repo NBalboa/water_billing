@@ -202,6 +202,7 @@ class BillingController extends Controller
             "change" => ['required']
         ]);
         $attributes['status'] = "PAID";
+        $attributes['paid_at'] = Carbon::now()->setTimezone('Asia/Manila');;
         Billing::where('id', $id)->update($attributes);
 
         return redirect("/billing/{$id}")->with("success", "Success paying");
@@ -221,6 +222,7 @@ class BillingController extends Controller
             'price' => ['required'],
             'total' => ['required'],
         ]);
+
 
 
 

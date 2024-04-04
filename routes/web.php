@@ -12,7 +12,7 @@ use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\AdminOrCollector;
 use App\Models\Billing;
 use App\Models\Consumer;
-
+use Carbon\Carbon;
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,12 +36,32 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
         $total_consumer = Consumer::count();
         $total_paid = Billing::where('status', "PAID")->count();
         $total_pending = Billing::where('status', "PENDING")->count();
+
+        $currentDate = Carbon::now()->setTimezone('Asia/Manila')->toDateString();
+        $currentMonth = Carbon::now()->setTimezone('Asia/Manila')->startOfMonth();
+        $daily_sales =
+            Billing::where('status', "PAID")
+            ->whereDate('paid_at', $currentDate)
+            ->sum('total');
+
+        $monthly_sales =
+            Billing::where('status', "PAID")
+            ->whereMonth('paid_at', $currentMonth)
+            ->sum('total');
+        // ->;
+
         return view('home', [
             'total_consumer' => $total_consumer,
             'total_paid' => $total_paid,
-            'total_pending' => $total_pending
+            'total_pending' => $total_pending,
+            'daily_sales' => $daily_sales,
+            'monthly_sales' => $monthly_sales
         ]);
     });
+
+    Route::get('billing/{billing_id}', [BillingController::class, 'billing']);
+
+    Route::post('billing/pay/{billing_id}', [BillingController::class, 'pay']);
 
     Route::get('billing/print/{billing_id}', [BillingController::class, 'print']);
     Route::get('billings/print/receipts/{month}/{year}/{status}/{search}', [BillingController::class, 'printAll']);
@@ -58,9 +78,7 @@ Route::middleware([AdminOnly::class, 'auth'])->group(function () {
     Route::post('user/edit/{id}', [UserController::class, 'edit'])->whereNumber('id');
     Route::post('user/delete/{id}', [UserController::class, 'delete'])->whereNumber('id');
 
-    Route::get('billing/{billing_id}', [BillingController::class, 'billing']);
 
-    Route::post('billing/pay/{billing_id}', [BillingController::class, 'pay']);
     Route::post('billing/delete/{billing_id}', [BillingController::class, 'delete'])->whereNumber('id');
     Route::get('billing/edit/{billing_id}', [BillingController::class, 'showEdit'])->whereNumber('id');
     Route::post('billing/edit/{billing_id}', [BillingController::class, 'edit'])->whereNumber('id');
@@ -72,6 +90,8 @@ Route::middleware([AdminOnly::class, 'auth'])->group(function () {
 
     Route::get('admin/register/admin', [RegisterController::class, 'createAdmin']);
     Route::get('admin/register/collector', [RegisterController::class, 'createCollector']);
+    Route::get('admin/register/cashier', [RegisterController::class, 'createCashier']);
+    Route::post('admin/register/cashier', [RegisterController::class, 'storeCashier']);
     Route::post('admin/register/admin', [RegisterController::class, 'storeAdmin']);
     Route::post('admin/register/collector', [RegisterController::class, 'storeCollector']);
 });

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('price'); //Water Bill
             $table->decimal('total'); //Grand Total
             $table->decimal('after_due');
+            $table->dateTime('paid_at')->nullable();
             $table->decimal('change')->default(0);
             $table->decimal('money')->default(0);
             $table->timestamps();

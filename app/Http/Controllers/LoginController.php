@@ -21,7 +21,11 @@ class LoginController extends Controller
 
         if (auth()->attempt($attributes)) {
             session()->regenerate();
-            return redirect('home')->with('success', 'Welcome Back');
+
+            if (auth()->user()->status == 1 || auth()->user()->status == 2) {
+                return redirect('/consumer');
+            }
+            return redirect('/home')->with('success', 'Welcome Back');
         }
 
         return back()->withErrors(['username' => 'Invalid Username or Password']);

@@ -81,7 +81,7 @@
                                             <td>
                                                 @auth
                                                     @if (auth()->user()->status == 0)
-                                                        <form action="/billing/delete/{{ $billing->id }}" method="POST"
+                                                        {{-- <form action="/billing/delete/{{ $billing->id }}" method="POST"
                                                             style="display: inline-block">
                                                             @csrf
                                                             <button class="btn btn-danger" type="submit">Delete</button>
@@ -90,9 +90,25 @@
                                                             Details
                                                         </a>
                                                         <a href="/billing/edit/{{ $billing->id }}"
-                                                            class="btn btn-default">Edit</a>
+                                                            class="btn btn-default">Edit</a> --}}
                                                     @endif
-                                                    <a class="btn btn-dark" href="/billing/print/{{ $billing->id }}">Print</a>
+
+                                                    @if (auth()->user()->status == 2)
+                                                        @if ($billing->status == 'PENDING')
+                                                            <a href="/billing/{{ $billing->id }}"
+                                                                class="btn btn-info text-right">
+                                                                Pay
+                                                            </a>
+                                                        @else
+                                                            <a class="btn btn-dark"
+                                                                href="/billing/print/{{ $billing->id }}">Print</a>
+                                                        @endif
+                                                    @endif
+
+                                                    @if (auth()->user()->status == 1)
+                                                        <a class="btn btn-dark"
+                                                            href="/billing/print/{{ $billing->id }}">Print</a>
+                                                    @endif
                                                 @endauth
 
                                             </td>
@@ -105,14 +121,17 @@
 
                     <!-- /.card-body -->
                 </div>
-                <div class="row">
-                    <div class="col-sm-6 offset-sm-6 text-right">
-                        <button type="button" class="btn btn-info text-right" data-toggle="modal"
-                            data-target="#create_billing">
-                            Create
-                        </button>
+                @if (auth()->user()->status == 1)
+                    <div class="row">
+                        <div class="col-sm-6 offset-sm-6 text-right">
+                            <button type="button" class="btn btn-info text-right" data-toggle="modal"
+                                data-target="#create_billing">
+                                Create
+                            </button>
+                        </div>
                     </div>
-                </div>
+                @endif
+
                 <div class="modal fade" id="create_billing">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -164,12 +183,9 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label for="total">Grand Total</label>
                                             <input type="number" class="form-control" id="total" name="total"
-                                                placeholder="Grand Total" value="{{ old('total') }}" readonly>
-                                            @error('total')
-                                                <p class="text-danger">{{ $message }}</p>
-                                            @enderror
+                                                placeholder="Grand Total" value="{{ old('total') }}" hidden>
+
                                         </div>
 
                                         <!-- /.card-body -->

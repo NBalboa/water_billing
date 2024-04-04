@@ -20,6 +20,39 @@ class RegisterController extends Controller
         return view('register.collector');
     }
 
+    public function createCashier()
+    {
+        return view('register.cashier');
+    }
+
+    public function storeCashier()
+    {
+        $attributes = request()->validate([
+            'username' => ['required', 'min:4', 'unique:users,username'],
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'password' => 'required|min:7',
+            // 'address' => 'required',
+            'street' => ['required'],
+            'provinces' => ['required'],
+            'phone_no' => 'required|max:11',
+            'confirm_password' => ['required', 'min:7', 'same:password'],
+        ]);
+        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['provinces']}");
+        // $attributes['address'] = "{$attributes['street']} {$attributes['barangays']} {$attributes['municipalities']} {$attributes['provinces']}";
+        $attributes['status'] = 2; //Cashier
+        $attributes['password'] = bcrypt($attributes['password']);
+        $attributes['remember_token'] = Str::random(60);
+        unset($attributes['confirm_password']);
+
+        User::create($attributes);
+
+        session()->flash('success', 'Cashier Created Successfully');
+
+        return redirect('/admin/register/cashier');
+        // var_dump($data);
+    }
+
 
     public function storeAdmin()
     {

@@ -58,6 +58,36 @@
                     </div>
                     <!-- /.col -->
                 </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-info">
+                                <i class="fas fa-users"></i>
+                            </span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Daily Income</span>
+                                <span class="info-box-number">{{ $daily_sales }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-success">
+                                <i class="fas fa-file-invoice"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Monthly Income</span>
+                                <span class="info-box-number">{{ $monthly_sales }}</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <!-- /.col -->
+                </div>
             </div><!-- /.container-fluid -->
         </section>
 

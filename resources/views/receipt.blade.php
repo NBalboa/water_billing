@@ -126,8 +126,8 @@
     @if ($billing->consumer)
         <section id="content">
             <h2 id="title">Water Billing Management System</h2>
-            <h3 style="text-align: center; margin-top: 4px">Datoc Street</h3>
-            <h4 style="text-align: center; margin-top: 4px">Pagadin City, 7016</h4>
+            <h3 style="text-align: center; margin-top: 4px">Vincenzo Sagun</h3>
+            <h4 style="text-align: center; margin-top: 4px">Zamboanga Del Sur</h4>
             <h1 style="text-align: center; margin: 24px 0">WATER BILL</h1>
             @php
                 $reading_date = Carbon\Carbon::parse($billing->reading_date);
@@ -173,10 +173,6 @@
                         <span class="payment_info">{{ $billing->total_consumption }}</span>
                     </div>
 
-                    <div class="payment-details" style="margin-top: 24px">
-                        <span class="payment_title">Status</span>
-                        <span class="payment_info">{{ $billing->status == 'PENDING' ? 'PENDING' : 'PAID' }}</span>
-                    </div>
                     <div class="payment-details">
                         <span class="payment_title">Water Bill</span>
                         <span class="payment_info">{{ $billing->price }}</span>

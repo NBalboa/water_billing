@@ -74,37 +74,43 @@
                                 <span class="font-weight-bolder">{{ $billing->after_due }}</span>
                             </div>
 
+
+
                             @if ($billing->status === 'PENDING')
-                                <form method="POST" action="/billing/pay/{{ $billing->id }}">
-                                    @csrf
-                                    <div class="form-group">
-                                        <input type="number" class="form-control" id="total" min="0"
-                                            value="{{ $billing->total }}" hidden readonly>
-                                        <label for="money">Money</label>
-                                        <input type="number" class="form-control" id="money" name="money"
-                                            value="{{ old('money') }}"
-                                            min="{{ $after_due_date ? round($billing->after_due) : round($billing->total) }}">
-                                        @error('money')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="change">Change</label>
-                                        <input type="number" class="form-control" id="change" name="change"
-                                            min="0" value="{{ old('change') }}" min="0" readonly>
-                                        @error('change')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
+                                {{-- if() --}}
+
+                                @if (auth()->user()->status == 2)
+                                    <form method="POST" action="/billing/pay/{{ $billing->id }}">
+                                        @csrf
+                                        <div class="form-group">
+                                            <input type="number" class="form-control" id="total" min="0"
+                                                value="{{ $billing->total }}" hidden readonly>
+                                            <label for="money">Money</label>
+                                            <input type="number" class="form-control" id="money" name="money"
+                                                value="{{ old('money') }}"
+                                                min="{{ $after_due_date ? round($billing->after_due) : round($billing->total) }}">
+                                            @error('money')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="change">Change</label>
+                                            <input type="number" class="form-control" id="change" name="change"
+                                                min="0" value="{{ old('change') }}" min="0" readonly>
+                                            @error('change')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+                                @endif
                             @else
                                 <div class="d-flex justify-content-between mx-5 my">
                                     <span class="font-weight-bold">Money</span>
                                     <span class="font-weight-bolder">{{ $billing->money }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between mx-5 my">
-                                    <span class="font-weight-bold">Grand Total</span>
+                                    <span class="font-weight-bold">Change</span>
                                     <span class="font-weight-bolder">{{ $billing->change }}</span>
                                 </div>
                             @endif

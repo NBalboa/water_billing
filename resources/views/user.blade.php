@@ -36,7 +36,17 @@
                                             <td>{{ $user->last_name }}</td>
                                             <td>{{ $user->phone_no }}</td>
                                             <td>{{ $user->address }}</td>
-                                            <td>{{ $user->status === 0 ? 'Admin' : 'Collector' }}</td>
+                                            @if ($user->status === 0)
+                                                <td>Admin</td>
+                                            @else
+                                                @if ($user->status === 1)
+                                                    <td>Collector</td>
+                                                @else
+                                                    <td>Cashier</td>
+                                                @endif
+                                            @endif
+                                            {{-- <td>{{ $user->status === 0 ? 'Admin' : $user->status === 1 ? 'Collector' : 'Cashier' }} --}}
+                                            </td>
                                             <td>
 
                                                 @auth

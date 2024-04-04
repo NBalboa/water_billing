@@ -129,7 +129,7 @@
                                                             <p class="text-danger">{{ $message }}</p>
                                                         @enderror
                                                         <select class="custom-select rounded-0 " name="provinces">
-                                                            <option value="">Select Provinces</option>
+                                                            <option value="">Select Barangay</option>
                                                             <option value="Barangay Kapatagan">Barangay Kapatagan</option>
                                                             <option value="Barangay Biu-os">Barangay Biu-os</option>
                                                             <option value="Barangay Danan">Barangay Danan</option>
