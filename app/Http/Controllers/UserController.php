@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BillingArea;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,7 @@ class UserController extends Controller
     public function all()
     {
 
-        $users = User::all();
+        $users = User::with('area')->get();
 
         return view('user', ['users' => $users]);
     }
@@ -28,17 +29,19 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+
         $attributes = request()->validate([
             'first_name' => 'required',
             'last_name' => 'required',
             // 'address' => 'required',
             'street' => ['required'],
-            'provinces' => ['required'],
+            'barangay' => ['required'],
+            'assign_id' => 'required',
             'phone_no' => 'required|max:11',
             'status' => ['required'],
         ]);
 
-        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['provinces']}");
+
 
         $user->update($attributes);
 
@@ -48,6 +51,12 @@ class UserController extends Controller
     public function showEdit($id)
     {
         $user = User::findOrFail($id);
+
+        if ($user->status == 1) {
+            $area = BillingArea::find($user->assign_id);
+            $areas = BillingArea::all();
+            return view('update.user', ['user' => $user, 'areas' => $areas, 'area' => $area]);
+        }
         return view('update.user', ['user' => $user]);
     }
 }

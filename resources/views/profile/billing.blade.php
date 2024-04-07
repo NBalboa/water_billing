@@ -29,6 +29,11 @@
                                 <span class="font-weight-bolder">{{ $due_date->format('F j, Y g:i A') }}</span>
                             </div>
                             <div class="d-flex justify-content-between mx-5">
+                                <span class="font-weight-bold">Collector</span>
+                                <span class="font-weight-bolder">{{ $billing->collector->first_name }}
+                                    {{ $billing->collector->last_name }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mx-5">
                                 <span class="font-weight-bold">Acount No.</span>
                                 <span class="font-weight-bolder">{{ sprintf('%07d', $billing->consumer->id) }}</span>
                             </div>

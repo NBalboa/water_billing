@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Billing;
 use App\Models\Consumer;
+use App\Models\Transaction;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -13,7 +15,6 @@ class BillingController extends Controller
     public function showEdit($id)
     {
         $billing = Billing::with('consumer')->findOrFail($id);
-
 
         // dd($billing);
 
@@ -131,7 +132,7 @@ class BillingController extends Controller
 
     public function billing($id)
     {
-        $billing = Billing::with('consumer')->findOrFail($id);
+        $billing = Billing::with('consumer', 'collector')->findOrFail($id);
 
         return view('profile.billing', ['billing' => $billing]);
     }
@@ -141,7 +142,7 @@ class BillingController extends Controller
 
         $attributes = request()->all();
         if ($attributes) {
-            $billings = Billing::with('consumer');
+            $billings = Billing::with('consumer', 'collector');
 
             if (request()->has('search') && request()->search != null) {
                 $search = request()->search;
@@ -181,7 +182,7 @@ class BillingController extends Controller
             }
             $billings = $billings->get();
         } else {
-            $billings = Billing::with('consumer')->latest()->get();
+            $billings = Billing::with('consumer', 'collector')->latest()->get();
         }
         $years = Billing::getYears();
 
@@ -190,20 +191,30 @@ class BillingController extends Controller
 
     public function print($id)
     {
-        $billing = Billing::with('consumer')->findOrFail($id);
+        $billing = Billing::with('consumer', 'collector')->findOrFail($id);
+        // dd($billing);
+        // dd(User::findOrFail(2));
+        // $collector = User::findOrFail($billing->collector_id);
 
+        // dd($collector);
         return view('receipt', ['billing' => $billing]);
     }
 
     public function pay($id)
     {
-        $attributes = request()->validate([
-            "money" => ['required'],
-            "change" => ['required']
-        ]);
-        $attributes['status'] = "PAID";
-        $attributes['paid_at'] = Carbon::now()->setTimezone('Asia/Manila');;
-        Billing::where('id', $id)->update($attributes);
+        $billing = Billing::findOrFail($id);
+        if (auth()->user()->status == 2 && $billing->status == 'PENDING') {
+            $attributes = request()->validate([
+                "money" => ['required'],
+                "change" => ['required']
+            ]);
+
+
+            $attributes['status'] = "PAID";
+            $attributes['paid_at'] = Carbon::now()->setTimezone('Asia/Manila');
+            $billing->update($attributes);
+            Transaction::create(['billing_id' => $billing->id, 'cashier_id' => auth()->user()->id]);
+        }
 
         return redirect("/billing/{$id}")->with("success", "Success paying");
     }
@@ -225,13 +236,13 @@ class BillingController extends Controller
 
 
 
-
         $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
         $dueDateTime = Carbon::now()->addDays(7)->setTimezone('Asia/Manila');
         $attributes['after_due'] = $attributes['total'] + $penalty;
         $attributes['reading_date'] = $currentDateTime;
         $attributes['due_date'] = $dueDateTime;
         $attributes['consumer_id'] = $id;
+        $attributes['collector_id'] = auth()->user()->id;
         $attributes['status'] = "PENDING";
 
 

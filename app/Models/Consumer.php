@@ -9,13 +9,13 @@ class Consumer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['meter_code', 'first_name', 'last_name', 'address', 'phone_no'];
+    protected $fillable = ['meter_code', 'first_name', 'last_name', 'street', 'barangay', 'phone_no'];
 
     public function scopeFilter($query)
     {
         if (request('table_search') ?? false) {
             $query->whereAny(
-                ['meter_code', 'first_name', 'last_name', 'phone_no', 'address'],
+                ['meter_code', 'first_name', 'last_name', 'phone_no', 'street', 'barangay'],
                 'LIKE',
                 '%' . request('table_search') . '%'
             )->get();

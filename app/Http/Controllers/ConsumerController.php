@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Billing;
+use App\Models\BillingArea;
 use App\Models\Consumer;
 use Illuminate\Http\Request;
 
@@ -11,6 +12,13 @@ class ConsumerController extends Controller
     //
     public function show()
     {
+
+        if (auth()->user()->status == 1) {
+            $area = BillingArea::find(auth()->user()->assign_id);
+
+            $consumers = Consumer::where('barangay', $area->name)->get();
+            return view('consumer', ['consumers' => $consumers,]);
+        }
 
         return view('consumer', ['consumers' => $this->searchConsumer()]);
     }
@@ -31,11 +39,12 @@ class ConsumerController extends Controller
     public function showEdit($id)
     {
         $consumer = Consumer::findOrFail($id);
-
-        return view('update.consumer', ['consumer' => $consumer]);
+        $areas = BillingArea::all();
+        return view('update.consumer', ['consumer' => $consumer, 'areas' => $areas]);
     }
 
     public function delete($id)
+
     {
         $consumer = Consumer::findOrFail($id);
 
@@ -53,7 +62,7 @@ class ConsumerController extends Controller
             'last_name' => ['required'],
             'phone_no' => ['required'],
             'street' => ['required'],
-            'provinces' => ['required'],
+            'barangay' => ['required'],
         ]);
 
 
@@ -75,11 +84,10 @@ class ConsumerController extends Controller
             'last_name' => ['required'],
             'phone_no' => ['required'],
             'street' => ['required'],
-            'provinces' => ['required'],
+            'barangay' => ['required'],
         ]);
 
         $attributes['meter_code'] = $meterCode;
-        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['provinces']}");
 
 
         Consumer::create($attributes);

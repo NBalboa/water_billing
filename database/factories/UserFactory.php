@@ -29,7 +29,8 @@ class UserFactory extends Factory
             "last_name" => "account",
             'password' => Hash::make("password"),
             'phone_no' => "09123456789",
-            'address' => "my_address, barangay barangay",
+            'street' => "street",
+            'barangay' => "barangay barangay",
             'status' => "0", // <---- check this
             'remember_token' => Str::random(60)
         ];

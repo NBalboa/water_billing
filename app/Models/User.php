@@ -14,11 +14,21 @@ class User extends Authenticatable
 
     // protected $guard = [];
 
-    protected $fillable = ['username', 'first_name', 'last_name', 'password', 'address', 'phone_no', 'status', 'remember_token'];
+    protected $fillable = ['username', 'assign_id', 'first_name', 'last_name', 'password', 'street', 'barangay', 'phone_no', 'status', 'remember_token'];
 
     public function billings()
     {
-        return $this->hasMany(Billing::class)->latest();
+        return $this->hasMany(Billing::class);
+    }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(BillingArea::class, 'assign_id');
     }
     protected $hidden = [
         'username',

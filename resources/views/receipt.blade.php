@@ -137,9 +137,12 @@
                 {{ sprintf('%07d', $billing->id) }}</p>
             <p style="margin-bottom: 8px"><span style="font-weight: bold">Date Created:</span>
                 {{ $reading_date->format('F j, Y g:i A') }}</p>
-            <p style="padding-bottom: 24px; border-bottom: black solid 2px"><span style="font-weight: bold">Due
+            <p style="margin-bottom: 8px"><span style="font-weight: bold">Due
                     Date:</span>
                 {{ $due_date->format('F j, Y g:i A') }}</p>
+            <p style="padding-bottom: 24px; border-bottom: black solid 2px"><span
+                    style="font-weight: bold">Collector:</span>
+                {{ $billing->collector->first_name }} {{ $billing->collector->last_name }}</p>
             <div id="print_content" style="margin-top: 24px">
                 <div>
                     <div class="payment-details">

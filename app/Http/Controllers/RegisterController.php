@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BillingArea;
 use Illuminate\Http\Request;
 use PHPUnit\Metadata\Uses;
 use \App\Models\User;
@@ -17,7 +18,8 @@ class RegisterController extends Controller
 
     public function createCollector()
     {
-        return view('register.collector');
+        $areas = BillingArea::all();
+        return view('register.collector', ['areas' => $areas]);
     }
 
     public function createCashier()
@@ -34,11 +36,11 @@ class RegisterController extends Controller
             'password' => 'required|min:7',
             // 'address' => 'required',
             'street' => ['required'],
-            'provinces' => ['required'],
+            'barangay' => ['required'],
             'phone_no' => 'required|max:11',
             'confirm_password' => ['required', 'min:7', 'same:password'],
         ]);
-        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['provinces']}");
+        // $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['provinces']}");
         // $attributes['address'] = "{$attributes['street']} {$attributes['barangays']} {$attributes['municipalities']} {$attributes['provinces']}";
         $attributes['status'] = 2; //Cashier
         $attributes['password'] = bcrypt($attributes['password']);
@@ -92,15 +94,15 @@ class RegisterController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'password' => 'required|min:7',
-            // 'address' => 'required',
+            'assign_id' => 'required',
             'street' => ['required'],
-            'provinces' => ['required'],
+            'barangay' => ['required'],
             'phone_no' => 'required|max:11',
             'confirm_password' => ['required', 'min:7', 'same:password'],
         ]);
-        $attributes['address'] = strtolower("{$attributes['street']}, {$attributes['provinces']}");
 
-        // $attributes['address'] = "{$attributes['street']} {$attributes['barangays']} {$attributes['municipalities']} {$attributes['provinces']}";
+
+
         $attributes['status'] = 1; //Collector
         $attributes['password'] = bcrypt($attributes['password']);
         $attributes['remember_token'] = Str::random(60);

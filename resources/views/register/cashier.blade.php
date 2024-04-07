@@ -56,13 +56,13 @@
                             @error('street')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
-                            <select class="custom-select rounded-0 " name="provinces">
+                            <select class="custom-select rounded-0 " name="barangay">
                                 <option value="">Select Barangay</option>
                                 <option value="Barangay Kapatagan">Barangay Kapatagan</option>
                                 <option value="Barangay Biu-os">Barangay Biu-os</option>
                                 <option value="Barangay Danan">Barangay Danan</option>
                             </select>
-                            @error('provinces')
+                            @error('barangay')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
 

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('billings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('consumer_id')->constrained()->onDelete('cascade');
+            $table->foreignId('collector_id');
             $table->dateTime('reading_date');
             $table->dateTime('due_date');
             $table->integer('previos');
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->decimal('price'); //Water Bill
             $table->decimal('total'); //Grand Total
             $table->decimal('after_due');
+            $table->tinyInteger('is_deleted')->default(0); // 0 not deleted, 1 archived, 2 deleted
             $table->dateTime('paid_at')->nullable();
             $table->decimal('change')->default(0);
             $table->decimal('money')->default(0);

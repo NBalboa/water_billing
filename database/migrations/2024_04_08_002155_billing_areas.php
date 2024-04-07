@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('consumers', function (Blueprint $table) {
+        //
+        Schema::create('billing_areas', function (Blueprint $table) {
             $table->id();
-            $table->string('meter_code');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone_no');
-            $table->string('street');
-            $table->string('barangay');
+            $table->string('name');
             $table->tinyInteger('is_deleted')->default(0); // 0 not deleted, 1 archived, 2 deleted
             $table->timestamps();
         });
@@ -29,6 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('consumers');
+        //
+        Schema::dropIfExists('billing_areas');
     }
 };

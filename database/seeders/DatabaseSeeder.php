@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Billing;
+use App\Models\BillingArea;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,26 +20,15 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(1)->create();
 
-        // DB::table('')->create([
-        //     'username' => "admin",
-        //     'first_name' => "admin",
-        //     'password' => Hash::make("password"),
-        //     'phone_no' => "09123456789",
-        //     'address' => "my_address",
-        //     'status' => "1"
-        // ]);
-        // DB::table('');
-        //pre account username
-        // DB::table('users')->insert([
-        //     'username' => "admin",
-        //     'first_name' => "admin",
-        //     "last_name" => "account",
-        //     'password' => Hash::make("password"),
-        //     'phone_no' => "09123456789",
-        //     'address' => "my_address",
-        //     'status' => "0", // <---- check this
-        //     'remember_token' => Str::random(60);
-        //     'created_at' => 
-        // ]);
+
+        $areas = [
+            ['name' => 'Barangay Kapatagan'],
+            ['name' => 'Barangay Biu-os'],
+            ['name' => 'Barangay Danan']
+        ];
+
+        foreach ($areas as $area) {
+            BillingArea::create($area);
+        }
     }
 }

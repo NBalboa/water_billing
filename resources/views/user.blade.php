@@ -17,6 +17,7 @@
                                 <th>Last Name</th>
                                 <th>Phone No.</th>
                                 <th>Address</th>
+                                <th>Area</th>
                                 <th>Role</th>
                                 <th>Action</th>
                             </tr>
@@ -35,7 +36,8 @@
                                             <td>{{ $user->first_name }} </td>
                                             <td>{{ $user->last_name }}</td>
                                             <td>{{ $user->phone_no }}</td>
-                                            <td>{{ $user->address }}</td>
+                                            <td>{{ $user->street }}, {{ $user->barangay }} </td>
+                                            <td>{{ $user->area->name ?? '' }}</td>
                                             @if ($user->status === 0)
                                                 <td>Admin</td>
                                             @else

@@ -12,6 +12,7 @@ class Billing extends Model
 
     protected $fillable = [
         'consumer_id',
+        'collector_id',
         'reading_date',
         'due_date',
         'after_due',
@@ -22,7 +23,9 @@ class Billing extends Model
         'price',
         'source_charges',
         'total',
-        'paid_at'
+        'paid_at',
+        'money',
+        'change'
     ];
 
     public static function getYears()
@@ -37,5 +40,16 @@ class Billing extends Model
     public function consumer()
     {
         return $this->belongsTo(Consumer::class);
+    }
+
+    public function collector()
+    {
+        return $this->belongsTo(User::class, 'collector_id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+        // return $this->hasMany(Transanction::class);
     }
 }

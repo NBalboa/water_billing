@@ -52,11 +52,24 @@
                             @error('street')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
-                            <select class="custom-select rounded-0 " name="provinces">
+                            <select class="custom-select rounded-0 " name="barangay">
                                 <option value="">Select Barangay</option>
                                 <option value="Barangay Kapatagan">Barangay Kapatagan</option>
                                 <option value="Barangay Biu-os">Barangay Biu-os</option>
                                 <option value="Barangay Danan">Barangay Danan</option>
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                            <label>Assign</label>
+                            @error('assign_id')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                            <select class="custom-select rounded-0 " name="assign_id">
+                                <option value="">Select Barangay</option>
+                                @foreach ($areas as $area)
+                                    <option value="{{ $area->id }}">{{ $area->name }}</option>
+                                @endforeach
                             </select>
 
                         </div>

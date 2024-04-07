@@ -12,7 +12,6 @@
                                 <div class="input-group input-group-sm" style="width: 150px;">
                                     <input type="text" name="table_search" class="form-control float-right"
                                         placeholder="Search">
-
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-default">
                                             <i class="fas fa-search"></i>
@@ -46,7 +45,7 @@
                                             <td>{{ $consumer->meter_code }}</td>
                                             <td>{{ $consumer->first_name }} {{ $consumer->last_name }}</td>
                                             <td>{{ $consumer->phone_no }}</td>
-                                            <td>{{ $consumer->address }}</td>
+                                            <td>{{ $consumer->street }}, {{ $consumer->barangay }}</td>
                                             <td>
                                                 <a href="/consumer/{{ $consumer->id }}" class="btn btn-info">View</a>
 
@@ -128,13 +127,13 @@
                                                         @error('street')
                                                             <p class="text-danger">{{ $message }}</p>
                                                         @enderror
-                                                        <select class="custom-select rounded-0 " name="provinces">
+                                                        <select class="custom-select rounded-0 " name="barangay">
                                                             <option value="">Select Barangay</option>
                                                             <option value="Barangay Kapatagan">Barangay Kapatagan</option>
                                                             <option value="Barangay Biu-os">Barangay Biu-os</option>
                                                             <option value="Barangay Danan">Barangay Danan</option>
                                                         </select>
-                                                        @error('provinces')
+                                                        @error('barangay')
                                                             <p class="text-danger">{{ $message }}</p>
                                                         @enderror
                                                     </div>

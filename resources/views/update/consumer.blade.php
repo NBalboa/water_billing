@@ -38,23 +38,24 @@
                         <div class="form-group">
                             <label>Address</label>
 
-                            @php
-                                $address = $consumer->address;
-                                $split_address = explode(',', $address);
-                                $trim_address = array_map('trim', $split_address);
-                                // dd($trim_address);
-                            @endphp
+
                             <div class="form-group">
-                                <input type="text" class="form-control mb-4" value="{{ $trim_address[0] }}"
+                                <input type="text" class="form-control mb-4" value="{{ $consumer->street }}"
                                     id="phone_no" name="street" placeholder="House No./Street/Purok">
                                 @error('street')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
-                                <select class="custom-select rounded-0 " name="provinces">
-                                    <option value="{{ $trim_address[1] }}">{{ $trim_address[1] }}</option>
-                                    <option value="Barangay Kapatagan">Barangay Kapatagan</option>
+                                <select class="custom-select rounded-0 " name="barangay">
+                                    <option value="{{ $consumer->barangay }}">{{ $consumer->barangay }}</option>
+
+                                    @foreach ($areas as $area)
+                                        @if ($area->name != $consumer->barangay)
+                                            <option value="{{ $area->name }}">{{ $area->name }}</option>
+                                        @endif
+                                    @endforeach
+                                    {{-- <option value="Barangay Kapatagan">Barangay Kapatagan</option>
                                     <option value="Barangay Biu-os">Barangay Biu-os</option>
-                                    <option value="Barangay Danan">Barangay Danan</option>
+                                    <option value="Barangay Danan">Barangay Danan</option> --}}
                                 </select>
                                 @error('provinces')
                                     <p class="text-danger">{{ $message }}</p>

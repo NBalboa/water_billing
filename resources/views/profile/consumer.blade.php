@@ -29,7 +29,7 @@
                         <hr>
                         <strong>Address</strong>
                         <p class="text-muted">
-                            {{ $consumer->address }}
+                            {{ $consumer->street }}, {{ $consumer->barangay }}
                         </p>
                         <hr>
                     </div>
