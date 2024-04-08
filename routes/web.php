@@ -58,7 +58,7 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
             'monthly_sales' => $monthly_sales
         ]);
     });
-
+    Route::get('billing/invoice', [BillingController::class, 'invoices']);
     Route::get('billing/{billing_id}', [BillingController::class, 'billing']);
 
     Route::post('billing/pay/{billing_id}', [BillingController::class, 'pay']);

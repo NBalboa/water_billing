@@ -81,6 +81,17 @@
                                     </a>
                                 </li>
                             @endif
+                            @if (auth()->user()->status == 2)
+                                <li class="nav-item">
+                                    <a href="/billing/invoice" class="nav-link">
+                                        <i class="nav-icon fas fa-columns"></i>
+                                        <p>
+                                            Invoices
+                                        </p>
+                                    </a>
+                                </li>
+                            @endif
+
                             <li class="nav-item">
                                 <a href="/consumer" class="nav-link">
                                     <i class="nav-icon fas fa-columns"></i>

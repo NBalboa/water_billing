@@ -189,6 +189,22 @@ class BillingController extends Controller
         return view('billing', ['billings' => $billings, 'years' => $years]);
     }
 
+    public function invoices()
+    {
+        $billings = Billing::with('consumer')->where('status', 'PENDING')->get();
+        $search = request('table_search');
+
+        if ($search ?? false) {
+            Billing::with('consumer')->where('status', 'PENDING')
+                ->orWhere('id', $search)
+                ->orWhereHas('consumer', function ($query) use ($search) {
+                    $query->whereAny(['first_name', 'last_name', 'meter_code'], 'LIKE', '%' . $search, '%search');
+                });
+        }
+
+        return view('invoice', ['billings' => $billings]);
+    }
+
     public function print($id)
     {
         $billing = Billing::with('consumer', 'collector')->findOrFail($id);
@@ -218,6 +234,8 @@ class BillingController extends Controller
 
         return redirect("/billing/{$id}")->with("success", "Success paying");
     }
+
+
 
     public function store($id)
     {
