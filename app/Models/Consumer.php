@@ -13,6 +13,7 @@ class Consumer extends Model
 
     public function scopeFilter($query)
     {
+
         if (request('table_search') ?? false) {
             $query->whereAny(
                 ['meter_code', 'first_name', 'last_name', 'phone_no', 'street', 'barangay'],

@@ -16,12 +16,21 @@ class ConsumerController extends Controller
         if (auth()->user()->status == 1) {
             $area = BillingArea::find(auth()->user()->assign_id);
 
-            $consumers = Consumer::where('barangay', $area->name)->get();
+
+            if (request('table_search') ?? false) {
+                $area = BillingArea::find(auth()->user()->assign_id);
+                $consumers = Consumer::where('barangay', $area->name)
+                    ->whereAny(
+                        ['meter_code', 'first_name', 'last_name', 'phone_no', 'street', 'barangay'],
+                        'LIKE',
+                        '%' . request('table_search') . '%'
+                    )->get();
+            } else {
+                $consumers = Consumer::where('barangay', $area->name)->paginate(10);
+            }
+
             return view('consumer', ['consumers' => $consumers,]);
         }
-
-
-
         return view('consumer', ['consumers' => $this->searchConsumer()]);
     }
 
