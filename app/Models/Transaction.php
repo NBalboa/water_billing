@@ -18,6 +18,6 @@ class Transaction extends Model
 
     public function billing()
     {
-        return $this->belongsTo(Billing::class, 'billing_id');
+        return $this->belongsTo(Billing::class, 'billing_id')->with('consumer');
     }
 }

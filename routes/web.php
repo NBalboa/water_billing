@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\AdminOrCollector;
@@ -66,6 +67,7 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
     Route::get('billing/print/{billing_id}', [BillingController::class, 'print']);
     Route::get('billings/print/receipts/{month}/{year}/{status}/{search}', [BillingController::class, 'printAll']);
     Route::get('all/billings', [BillingController::class, 'all']);
+    Route::get('all/transactions', [TransactionController::class, 'all']);
     Route::get('consumer', [ConsumerController::class, 'show']);
     Route::get('consumer/{id}', [ConsumerController::class, 'profile'])->whereNumber('id');
     Route::post('create/consumer/billing/{id}', [BillingController::class, 'store'])->whereNumber('id');

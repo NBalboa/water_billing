@@ -73,6 +73,11 @@
 
                     <!-- /.card-body -->
                 </div>
+                @if (method_exists($consumers, 'links'))
+                    <div class="d-flex justify-content-center">
+                        {{ $consumers->links('pagination::bootstrap-4') }}
+                    </div>
+                @endif
                 @auth
                     @if (auth()->user()->status == 0)
                         <div class="row">

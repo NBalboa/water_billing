@@ -20,12 +20,14 @@ class ConsumerController extends Controller
             return view('consumer', ['consumers' => $consumers,]);
         }
 
+
+
         return view('consumer', ['consumers' => $this->searchConsumer()]);
     }
 
     protected function searchConsumer()
     {
-        return Consumer::latest()->filter()->get();
+        return Consumer::latest()->filter()->paginate(10);
     }
 
 

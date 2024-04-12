@@ -63,7 +63,7 @@
                                     <th>Bill No.</th>
                                     <th>Created At</th>
                                     <th>Meter Code</th>
-                                    <th>Name</th>
+                                    <th>Consumer Name</th>
                                     <th>Status</th>
                                     <th>Total Consumption</th>
                                     <th>Total Amount Due</th>
@@ -83,6 +83,7 @@
                                         @endphp
                                         <tr>
                                             <td>{{ sprintf('%07d', $billing->id) }}</td>
+                                            </td>
                                             <td>{{ $reading_date->format('F j, Y g:i A') }}</td>
                                             <td>{{ $billing->consumer->meter_code }}</td>
                                             <td>{{ $billing->consumer->first_name }}
@@ -92,18 +93,6 @@
                                             <td>{{ $billing->total }}</td>
                                             <td>{{ $billing->after_due }}</td>
                                             <td>
-                                                {{-- @if (auth()->user()->status == 0)
-                                                    <form action="/billing/delete/{{ $billing->id }}" method="POST"
-                                                        style="display: inline-block">
-                                                        @csrf
-                                                        <button class="btn btn-danger" type="submit">Delete</button>
-                                                    </form>
-                                                    <a href="/billing/{{ $billing->id }}" class="btn btn-info text-right">
-                                                        Details
-                                                    </a>
-                                                    <a href="/billing/edit/{{ $billing->id }}"
-                                                        class="btn btn-default">Edit</a>
-                                                @endif --}}
                                                 <a class="btn btn-dark" href="/billing/print/{{ $billing->id }}">Print</a>
                                             </td>
                                         </tr>
@@ -113,9 +102,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- /.card-body -->
                 </div>
-
+                @if (method_exists($billings, 'links'))
+                    <div class="d-flex justify-content-center">
+                        {{ $billings->links('pagination::bootstrap-4') }}
+                    </div>
+                @endif
                 {{-- @php
                     $month = request()->query('month');
                     $year = request()->query('year');

@@ -76,7 +76,15 @@
                                     <a href="/all/billings" class="nav-link">
                                         <i class="nav-icon fas fa-columns"></i>
                                         <p>
-                                            Reports
+                                            Billing Reports
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/all/transactions" class="nav-link">
+                                        <i class="nav-icon fas fa-columns"></i>
+                                        <p>
+                                            Transaction Reports
                                         </p>
                                     </a>
                                 </li>

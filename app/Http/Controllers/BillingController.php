@@ -141,12 +141,12 @@ class BillingController extends Controller
     {
 
         $attributes = request()->all();
-        if ($attributes) {
+        if (request()->has('search')) {
             $billings = Billing::with('consumer', 'collector');
 
             if (request()->has('search') && request()->search != null) {
                 $search = request()->search;
-                $billings->orWhere('id', $search)
+                $billings->orWhere('id', intval($search))
                     ->orWhereHas('consumer', function ($query) use ($search) {
                         $query->where(function ($query) use ($search) {
                             if (request()->has('year') && request()->year != null) {
@@ -165,6 +165,8 @@ class BillingController extends Controller
                             $query->whereAny(['meter_code', 'first_name', 'last_name'], 'LIKE', '%' . $search . '%');
                         });
                     });
+            } else if (request()->status == 'on' && request()->search == null) {
+                return redirect('/all/billings');
             } else {
                 if (request()->has('year') && request()->year != null) {
                     $billings->whereYear('reading_date', request()->year);
@@ -182,7 +184,7 @@ class BillingController extends Controller
             }
             $billings = $billings->get();
         } else {
-            $billings = Billing::with('consumer', 'collector')->latest()->get();
+            $billings = Billing::with('consumer', 'collector')->latest()->paginate(5);
         }
         $years = Billing::getYears();
 
@@ -191,15 +193,15 @@ class BillingController extends Controller
 
     public function invoices()
     {
-        $billings = Billing::with('consumer')->where('status', 'PENDING')->get();
         $search = request('table_search');
 
         if ($search ?? false) {
-            Billing::with('consumer')->where('status', 'PENDING')
-                ->orWhere('id', $search)
-                ->orWhereHas('consumer', function ($query) use ($search) {
-                    $query->whereAny(['first_name', 'last_name', 'meter_code'], 'LIKE', '%' . $search, '%search');
-                });
+            $billings = Billing::with('consumer')->where('status', 'PENDING')
+                ->where('id', intval($search));
+
+            $billings = $billings->get();
+        } else {
+            $billings = Billing::with('consumer')->where('status', 'PENDING')->paginate(10);
         }
 
         return view('invoice', ['billings' => $billings]);
