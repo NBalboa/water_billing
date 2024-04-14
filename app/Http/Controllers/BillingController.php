@@ -201,7 +201,8 @@ class BillingController extends Controller
 
             $billings = $billings->get();
         } else {
-            $billings = Billing::with('consumer')->where('status', 'PENDING')->paginate(10);
+            $billings = Billing::with('consumer')
+                ->where('status', 'PENDING')->paginate(10);
         }
 
         return view('invoice', ['billings' => $billings]);

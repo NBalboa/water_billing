@@ -19,14 +19,16 @@ class ConsumerController extends Controller
 
             if (request('table_search') ?? false) {
                 $area = BillingArea::find(auth()->user()->assign_id);
-                $consumers = Consumer::where('barangay', $area->name)
+                $consumers = Consumer::where('is_deleted', 0)
+                    ->where('barangay', $area->name)
                     ->whereAny(
                         ['meter_code', 'first_name', 'last_name', 'phone_no', 'street', 'barangay'],
                         'LIKE',
                         '%' . request('table_search') . '%'
                     )->get();
             } else {
-                $consumers = Consumer::where('barangay', $area->name)->paginate(10);
+                $consumers = Consumer::where('is_deleted', 0)
+                    ->where('barangay', $area->name)->paginate(10);
             }
 
             return view('consumer', ['consumers' => $consumers,]);
@@ -36,13 +38,17 @@ class ConsumerController extends Controller
 
     protected function searchConsumer()
     {
-        return Consumer::latest()->filter()->paginate(10);
+        return Consumer::where('is_deleted', 0)->latest()->filter()->paginate(10);
     }
 
 
     public function profile($id)
     {
         $consumer = Consumer::with('billings')->findOrFail($id);
+
+        if ($consumer->is_deleted == 1) {
+            return redirect('/consumer');
+        }
 
         return view('profile.consumer', ['consumer' => $consumer]);
     }
@@ -59,7 +65,9 @@ class ConsumerController extends Controller
     {
         $consumer = Consumer::findOrFail($id);
 
-        $consumer->delete();
+        $consumer->is_deleted = 1;
+
+        $consumer->save();
 
         return redirect("/consumer");
     }

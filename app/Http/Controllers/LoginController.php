@@ -19,13 +19,20 @@ class LoginController extends Controller
             'password' => ['required']
         ]);
 
+
         if (auth()->attempt($attributes)) {
             session()->regenerate();
 
-            if (auth()->user()->status == 1 || auth()->user()->status == 2) {
-                return redirect('/consumer');
+            if (auth()->user()->is_deleted == 0) {
+                if (auth()->user()->status == 1 || auth()->user()->status == 2) {
+                    return redirect('/consumer');
+                }
+                return redirect('/home')->with('success', 'Welcome Back');
+            } else {
+                auth()->logout();
+                session()->regenerate();
+                return back()->withErrors(['username' => 'Your Account is Deleted']);
             }
-            return redirect('/home')->with('success', 'Welcome Back');
         }
 
         return back()->withErrors(['username' => 'Invalid Username or Password']);

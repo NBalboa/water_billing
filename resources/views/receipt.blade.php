@@ -156,7 +156,7 @@
                     </div>
                     <div class="payment-details">
                         <span class="payment_title">Address: </span>
-                        <span class="payment_info">{{ $billing->consumer->address }}
+                        <span class="payment_info">{{ $billing->consumer->street }}, {{ $billing->consumer->barangay }}
                         </span>
                     </div>
                     <div class="payment-details">

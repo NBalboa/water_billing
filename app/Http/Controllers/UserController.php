@@ -12,7 +12,7 @@ class UserController extends Controller
     public function all()
     {
 
-        $users = User::with('area')->get();
+        $users = User::where('is_deleted', 0)->with('area')->get();
 
         return view('user', ['users' => $users]);
     }
@@ -20,7 +20,8 @@ class UserController extends Controller
     public function delete($id)
     {
         $user = User::findOrFail($id);
-        $user->delete();
+        $user->is_deleted = 1;
+        $user->save();
 
         return redirect('/admin/users');
     }

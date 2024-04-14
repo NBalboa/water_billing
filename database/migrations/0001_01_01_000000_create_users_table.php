@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phone_no');
             $table->string('street');
             $table->string('barangay');
+            $table->tinyInteger('is_deleted')->default(0);
             $table->tinyInteger('status'); // 0-admin 1-collector 2 -cashier
             $table->rememberToken();
             $table->timestamps();
