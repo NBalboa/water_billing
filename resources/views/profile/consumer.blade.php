@@ -6,7 +6,6 @@
         <section class="content-header">
             <div class="container-fluid">
                 <p>Consumer Profile</p>
-
             </div>
             <section class="content">
                 <div class="card card-primary">
@@ -99,16 +98,9 @@
                                                                 class="btn btn-info text-right">
                                                                 Pay
                                                             </a>
-                                                        @else
-                                                            <a class="btn btn-dark"
-                                                                href="/billing/print/{{ $billing->id }}">Print</a>
                                                         @endif
                                                     @endif
-
-                                                    @if (auth()->user()->status == 1)
-                                                        <a class="btn btn-dark"
-                                                            href="/billing/print/{{ $billing->id }}">Print</a>
-                                                    @endif
+                                                    <a class="btn btn-dark" href="/billing/print/{{ $billing->id }}">Print</a>
                                                 @endauth
 
                                             </td>

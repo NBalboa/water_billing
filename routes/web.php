@@ -33,6 +33,9 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
 
     Route::post('logout', [LoginController::class, 'logout']);
 
+    Route::get('profile/{user_id}', [UserController::class, 'profile']);
+    Route::post('profile/new/password/{user_id}', [UserController::class, 'changePassword']);
+    Route::post('profile/new/username/{user_id}', [UserController::class, 'changeUsername']);
     Route::get('home', function () {
         $total_consumer = Consumer::count();
         $total_paid = Billing::where('status', "PAID")->count();
