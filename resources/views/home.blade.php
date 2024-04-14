@@ -62,7 +62,7 @@
                     <div class="col-md-3 col-sm-6 col-12">
                         <div class="info-box">
                             <span class="info-box-icon bg-info">
-                                <i class="fas fa-receipt"></i>
+                                <i class="fas fa-file-invoice-dollar"></i>
                             </span>
 
                             <div class="info-box-content">
@@ -75,7 +75,7 @@
                     <div class="col-md-3 col-sm-6 col-12">
                         <div class="info-box">
                             <span class="info-box-icon bg-success">
-                                <i class="fas fa-receipt"></i>
+                                <i class="fas fa-file-invoice-dollar"></i>
                             </span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Monthly Income</span>
