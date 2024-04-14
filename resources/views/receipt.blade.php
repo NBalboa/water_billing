@@ -216,9 +216,9 @@
         <button onclick="window.print()" class="printBtn">Print</button>
         @auth
             @if (auth()->user()->status == 0)
-                <a href="/billing/{{ $billing->id }}" id="back">Back</a>
+                <a href="/all/billings" id="back">Back</a>
             @else
-                <a href="/consumer/{{ $billing->consumer_id }}"id="back">Back</a>
+                <a href="/billing/{{ $billing->id }}" id="back">Back</a>
             @endif
         @endauth
     </div>

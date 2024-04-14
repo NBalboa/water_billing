@@ -234,7 +234,7 @@ class BillingController extends Controller
             Transaction::create(['billing_id' => $billing->id, 'cashier_id' => auth()->user()->id]);
         }
 
-        return redirect("/billing/{$id}")->with("success", "Success paying");
+        return redirect("/billing/print/{$id}");
     }
 
 

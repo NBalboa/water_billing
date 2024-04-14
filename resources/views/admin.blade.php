@@ -27,7 +27,7 @@
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <li class="nav-item ">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars"></i></a>
                 </li>
@@ -62,10 +62,15 @@
                                 </div>
                             @endif
                         </li>
+                        @php
+                            $current = explode('/', url()->current());
+                            $path = implode('/', array_slice($current, 3));
+                        @endphp
+
                         @auth
                             @if (auth()->user()->status == 0)
                                 <li class="nav-item">
-                                    <a href="/home" class="nav-link">
+                                    <a href="/home" class="nav-link {{ $path == 'home' ? 'active' : '' }}">
                                         <i class="nav-icon fas fa-columns"></i>
                                         <p>
                                             Dashboard
@@ -73,16 +78,17 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/all/billings" class="nav-link">
-                                        <i class="nav-icon fas fa-columns"></i>
+                                    <a href="/all/billings" class="nav-link {{ $path == 'all/billings' ? 'active' : '' }}">
+                                        <i class="nav-icon fas fa-money-bill-wave"></i>
                                         <p>
                                             Billing Reports
                                         </p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/all/transactions" class="nav-link">
-                                        <i class="nav-icon fas fa-columns"></i>
+                                    <a href="/all/transactions"
+                                        class="nav-link {{ $path == 'all/transactions' ? 'active' : '' }}">
+                                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
                                         <p>
                                             Transaction Reports
                                         </p>
@@ -91,8 +97,9 @@
                             @endif
                             @if (auth()->user()->status == 2)
                                 <li class="nav-item">
-                                    <a href="/billing/invoice" class="nav-link">
-                                        <i class="nav-icon fas fa-columns"></i>
+                                    <a href="/billing/invoice"
+                                        class="nav-link {{ $path == 'billing/invoice' ? 'active' : '' }}">
+                                        <i class="nav-icon fas fa-receipt"></i>
                                         <p>
                                             Invoices
                                         </p>
@@ -101,8 +108,8 @@
                             @endif
 
                             <li class="nav-item">
-                                <a href="/consumer" class="nav-link">
-                                    <i class="nav-icon fas fa-columns"></i>
+                                <a href="/consumer" class="nav-link {{ $path == 'consumer' ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-users"></i>
                                     <p>
                                         Consumer
                                     </p>
@@ -110,8 +117,9 @@
                             </li>
                             @if (auth()->user()->status == 0)
                                 <li class="nav-item menu-is-opening menu-open">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                                    <a href="#"
+                                        class="nav-link {{ str_contains($path, 'admin/register') ? 'active' : '' }}">
+                                        <i class="nav-icon far fa-registered"></i>
                                         <p>
                                             Register
                                             <i class="right fas fa-angle-left"></i>
@@ -125,13 +133,15 @@
                                             </a>
                                         </li> --}}
                                         <li class="nav-item">
-                                            <a href="/admin/register/collector" class="nav-link">
+                                            <a href="/admin/register/collector"
+                                                class="nav-link {{ $path == 'admin/register/collector' ? 'active' : '' }}">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Collector</p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="/admin/register/cashier" class="nav-link">
+                                            <a href="/admin/register/cashier"
+                                                class="nav-link {{ $path == 'admin/register/cashier' ? 'active' : '' }}">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Cashier</p>
                                             </a>
@@ -139,8 +149,8 @@
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/admin/users" class="nav-link">
-                                        <i class="nav-icon fas fa-columns"></i>
+                                    <a href="/admin/users" class="nav-link {{ $path == 'admin/users' ? 'active' : '' }}">
+                                        <i class="nav-icon fas fa-user-tie"></i>
                                         <p>
                                             Users
                                         </p>

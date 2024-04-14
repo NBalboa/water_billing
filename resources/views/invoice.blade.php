@@ -49,7 +49,7 @@
                         <tbody>
                             @if ($billings->isEmpty())
                                 <tr>
-                                    <td>No Reports Found</td>
+                                    <td>No Invoices Found</td>
                                 </tr>
                             @else
                                 @foreach ($billings as $billing)

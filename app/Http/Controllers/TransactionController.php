@@ -21,7 +21,7 @@ class TransactionController extends Controller
 
             $transactions = $transactions->get();
         } else {
-            $transactions = Transaction::with('billing', 'cashier')->paginate(10);
+            $transactions = Transaction::with('billing', 'cashier')->paginate(5);
         }
 
         // dd($transactions);
