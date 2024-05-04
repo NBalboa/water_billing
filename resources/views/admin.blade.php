@@ -19,6 +19,7 @@
     <script src="/js/address.js"></script>
     <script src="/js/billing.js"></script>
     <script src="/js/pay.js"></script>
+    <script src="/js/consumer_search.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">

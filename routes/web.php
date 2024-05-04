@@ -73,6 +73,7 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
     Route::get('all/transactions', [TransactionController::class, 'all']);
     Route::get('consumer', [ConsumerController::class, 'show']);
     Route::get('consumer/{id}', [ConsumerController::class, 'profile'])->whereNumber('id');
+    Route::get('consumer/search/{search}', [ConsumerController::class, 'search']);
     Route::post('create/consumer/billing/{id}', [BillingController::class, 'store'])->whereNumber('id');
 });
 

@@ -6,11 +6,25 @@
         <section class="content-header">
             <div class="container-fluid">
                 <p>Consumer Profile</p>
+
+                <div class="pb-3 text-right">
+                    @auth
+                        @if (auth()->user()->status == 0)
+                            <form action="/admin/consumer/delete/{{ $consumer->id }}" method="POST" style="display: inline-block">
+                                @csrf
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                            <a href="/admin/consumer/edit/{{ $consumer->id }}" class="btn btn-default">Edit</a>
+                        @endif
+                    @endauth
+                </div>
+
             </div>
             <section class="content">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Details</h3>
+
                     </div>
                     <div class="card-body">
                         <strong>Full Name</strong>
@@ -34,6 +48,8 @@
                     </div>
                     <!-- /.card-body -->
                 </div>
+
+
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Billings</h3>

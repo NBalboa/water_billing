@@ -10,8 +10,8 @@
                         <div class="card-tools">
                             <form method="GET" action="#">
                                 <div class="input-group input-group-sm" style="width: 150px;">
-                                    <input type="text" name="table_search" class="form-control float-right"
-                                        placeholder="Search">
+                                    <input type="text" name="table_search" id="consumer_search"
+                                        class="form-control float-right" placeholder="Search">
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-default">
                                             <i class="fas fa-search"></i>
@@ -31,10 +31,9 @@
                                     <th>Name</th>
                                     <th>Phone No.</th>
                                     <th>Address</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="consumer_result">
                                 @if ($consumers->isEmpty())
                                     <tr>
                                         <td>No Consumer Yet</td>
@@ -43,11 +42,19 @@
                                     {{-- <p>Not Empty</p> --}}
                                     @foreach ($consumers as $consumer)
                                         <tr>
-                                            <td>{{ $consumer->meter_code }}</td>
-                                            <td>{{ $consumer->first_name }} {{ $consumer->last_name }}</td>
+                                            <td>
+                                                {{ $consumer->meter_code }}
+                                            </td>
+                                            <td>
+                                                <a href="/consumer/{{ $consumer->id }} " class="text-dark">
+                                                    {{ $consumer->first_name }} {{ $consumer->last_name }}
+                                                </a>
+                                            </td>
                                             <td>{{ $consumer->phone_no }}</td>
                                             <td>{{ $consumer->street }}, {{ $consumer->barangay }}</td>
-                                            <td>
+                                        </tr>
+
+                                        {{-- <td>
                                                 <a href="/consumer/{{ $consumer->id }}" class="btn btn-info">View</a>
 
                                                 @auth
@@ -63,8 +70,7 @@
                                                 @endif
 
 
-                                            </td>
-                                        </tr>
+                                            </td> --}}
                                     @endforeach
                                 @endif
                             </tbody>

@@ -41,6 +41,55 @@ class ConsumerController extends Controller
         return Consumer::where('is_deleted', 0)->latest()->filter()->paginate(10);
     }
 
+    public function search($search)
+    {
+        $output = "";
+
+        if (auth()->user()->status == 1) {
+            $area = BillingArea::find(auth()->user()->assign_id);
+            if ($search) {
+                $area = BillingArea::find(auth()->user()->assign_id);
+                $consumers = Consumer::where('is_deleted', 0)
+                    ->where('barangay', $area->name)
+                    ->whereAny(
+                        ['meter_code', 'first_name', 'last_name', 'phone_no', 'street', 'barangay'],
+                        'LIKE',
+                        '%' . $search . '%'
+                    )->get();
+            } else {
+                $consumers = Consumer::where('is_deleted', 0)
+                    ->where('barangay', $area->name)->paginate(10);
+            }
+        } else {
+            if ($search) {
+                $consumers = Consumer::where('is_deleted', 0)->whereAny(
+                    ['meter_code', 'first_name', 'last_name', 'phone_no', 'street', 'barangay'],
+                    'LIKE',
+                    '%' . $search . '%'
+                )->get();
+            } else {
+                $consumers = Consumer::where('is_deleted', 0);
+            }
+        }
+
+
+        foreach ($consumers as $consumer) {
+            $output .= '
+        <tr>
+            <td>' . $consumer->meter_code . '</td>
+            <td>
+                <a href="/consumer/' . $consumer->id . ' " class="text-dark">
+                    ' . $consumer->first_name . ' ' . $consumer->last_name . '
+                </a>
+            </td>
+            <td>' . $consumer->phone_no . '</td>
+            <td>' . $consumer->street . ', ' . $consumer->barangay . '</td>
+        </tr>
+        ';
+        }
+
+        return response($output);
+    }
 
     public function profile($id)
     {
