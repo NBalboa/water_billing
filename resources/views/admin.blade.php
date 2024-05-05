@@ -70,15 +70,24 @@
                         @endphp
 
                         @auth
-                            @if (auth()->user()->status == 0)
+
+                            @if (auth()->user()->status == 0 || auth()->user()->status == 2)
                                 <li class="nav-item">
                                     <a href="/home" class="nav-link {{ $path == 'home' ? 'active' : '' }}">
                                         <i class="nav-icon fas fa-columns"></i>
-                                        <p>
-                                            Dashboard
-                                        </p>
+                                        @if (auth()->user()->status == 0)
+                                            <p>
+                                                Dashboard
+                                            </p>
+                                        @else
+                                            <p>
+                                                Sales
+                                            </p>
+                                        @endif
                                     </a>
                                 </li>
+                            @endif
+                            @if (auth()->user()->status == 0)
                                 <li class="nav-item">
                                     <a href="/all/billings" class="nav-link {{ $path == 'all/billings' ? 'active' : '' }}">
                                         <i class="nav-icon fas fa-money-bill-wave"></i>

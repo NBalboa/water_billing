@@ -13,6 +13,7 @@ use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\AdminOrCollector;
 use App\Models\Billing;
 use App\Models\Consumer;
+use App\Models\Transaction;
 use Carbon\Carbon;
 
 Route::get('/', function () {
@@ -36,30 +37,57 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
     Route::get('profile/{user_id}', [UserController::class, 'profile']);
     Route::post('profile/new/password/{user_id}', [UserController::class, 'changePassword']);
     Route::post('profile/new/username/{user_id}', [UserController::class, 'changeUsername']);
+
     Route::get('home', function () {
         $total_consumer = Consumer::count();
         $total_paid = Billing::where('status', "PAID")->count();
         $total_pending = Billing::where('status', "PENDING")->count();
-
         $currentDate = Carbon::now()->setTimezone('Asia/Manila')->toDateString();
         $currentMonth = Carbon::now()->setTimezone('Asia/Manila')->startOfMonth();
-        $daily_sales =
-            Billing::where('status', "PAID")
-            ->whereDate('paid_at', $currentDate)
-            ->sum('total');
+        if (auth()->user()->status === 0) {
 
-        $monthly_sales =
-            Billing::where('status', "PAID")
-            ->whereMonth('paid_at', $currentMonth)
-            ->sum('total');
+            $daily_sales =
+                Billing::where('status', "PAID")
+                ->whereDate('paid_at', $currentDate)
+                ->sum('total');
+
+            $monthly_sales =
+                Billing::where('status', "PAID")
+                ->whereMonth('paid_at', $currentMonth)
+                ->sum('total');
+        } else {
+            $transactions_daily =
+                Transaction::with('cashier', 'billing')
+                ->where('cashier_id', auth()->user()->id)
+                ->whereHas('billing', function ($query) use ($currentDate) {
+                    $query->whereDate('paid_at', $currentDate);
+                })->get();
+            $transactions_monthly =
+                Transaction::with('cashier', 'billing')
+                ->where('cashier_id', auth()->user()->id)
+                ->whereHas('billing', function ($query) use ($currentMonth) {
+                    $query->whereMonth('paid_at', $currentMonth);
+                })->get();
+
+            $daily_sales = 0.00;
+            $monthly_sales = 0.00;
+            foreach ($transactions_daily as $transaction_daily) {
+                $daily_sales += $transaction_daily->billing->total;
+            }
+
+            foreach ($transactions_monthly as $transaction_monthly) {
+                $monthly_sales += $transaction_monthly->billing->total;
+            }
+            // dd($daily_sales);
+        }
         // ->;
 
         return view('home', [
             'total_consumer' => $total_consumer,
             'total_paid' => $total_paid,
             'total_pending' => $total_pending,
-            'daily_sales' => $daily_sales,
-            'monthly_sales' => $monthly_sales
+            'daily_sales' => number_format($daily_sales, 2),
+            'monthly_sales' => number_format($monthly_sales, 2)
         ]);
     });
     Route::get('billing/invoice', [BillingController::class, 'invoices']);

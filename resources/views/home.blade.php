@@ -9,55 +9,61 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Dashboard</h1>
+                        @if (auth()->user()->status == 0)
+                            <h1>Dashboard</h1>
+                        @else
+                            <h1>Sales</h1>
+                        @endif
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-info">
-                                <i class="fas fa-users"></i>
-                            </span>
+                @if (auth()->user()->status == 0)
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 col-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-info">
+                                    <i class="fas fa-users"></i>
+                                </span>
 
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Consumer</span>
-                                <span class="info-box-number">{{ $total_consumer }}</span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total Consumer</span>
+                                    <span class="info-box-number">{{ $total_consumer }}</span>
+                                </div>
+                                <!-- /.info-box-content -->
                             </div>
-                            <!-- /.info-box-content -->
+                            <!-- /.info-box -->
                         </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-success">
-                                <i class="fas fa-file-invoice"></i>
-                            </span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Pending Bill</span>
-                                <span class="info-box-number">{{ $total_pending }}</span>
+                        <!-- /.col -->
+                        <div class="col-md-3 col-sm-6 col-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success">
+                                    <i class="fas fa-file-invoice"></i>
+                                </span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total Pending Bill</span>
+                                    <span class="info-box-number">{{ $total_pending }}</span>
+                                </div>
+                                <!-- /.info-box-content -->
                             </div>
-                            <!-- /.info-box-content -->
+                            <!-- /.info-box -->
                         </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-warning">
-                                <i class="fas fa-receipt"></i>
-                            </span>
+                        <!-- /.col -->
+                        <div class="col-md-3 col-sm-6 col-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-warning">
+                                    <i class="fas fa-receipt"></i>
+                                </span>
 
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Paid</span>
-                                <span class="info-box-number">{{ $total_paid }}</span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total Paid</span>
+                                    <span class="info-box-number">{{ $total_paid }}</span>
+                                </div>
+                                <!-- /.info-box-content -->
                             </div>
-                            <!-- /.info-box-content -->
+                            <!-- /.info-box -->
                         </div>
-                        <!-- /.info-box -->
+                        <!-- /.col -->
                     </div>
-                    <!-- /.col -->
-                </div>
+                @endif
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-12">
                         <div class="info-box">
