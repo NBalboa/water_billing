@@ -46,15 +46,40 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
         $currentMonth = Carbon::now()->setTimezone('Asia/Manila')->startOfMonth();
         if (auth()->user()->status === 0) {
 
-            $daily_sales =
+            $transactions_daily =
                 Billing::where('status', "PAID")
-                ->whereDate('paid_at', $currentDate)
-                ->sum('total');
+                ->whereDate('paid_at', $currentDate)->get();
 
-            $monthly_sales =
+            $transactions_monthly =
                 Billing::where('status', "PAID")
-                ->whereMonth('paid_at', $currentMonth)
-                ->sum('total');
+                ->whereMonth('paid_at', $currentMonth)->get();
+
+
+            $daily_sales = 0.00;
+            $monthly_sales = 0.00;
+
+            foreach ($transactions_daily as $transaction_daily) {
+                $reading_date = Carbon::parse($transaction_daily->reading_date);
+                $paid_at = Carbon::parse($transaction_daily->paid_at);
+                $result = $reading_date->diffInWeeks($paid_at);
+
+                $payment = $transaction_daily->price;
+                if ($result >= 1) {
+                    $payment = $transaction_daily->price + (intval($result) * 50);
+                }
+                $daily_sales += $payment;
+            }
+
+            foreach ($transactions_monthly as $transaction_monthly) {
+                $reading_date = Carbon::parse($transaction_monthly->reading_date);
+                $paid_at = Carbon::parse($transaction_monthly->paid_at);
+                $result = $reading_date->diffInWeeks($paid_at);
+                $payment = $transaction_monthly->price;
+                if ($result >= 1) {
+                    $payment = $transaction_monthly->price + (intval($result) * 50);
+                }
+                $monthly_sales += $payment;
+            }
         } else {
             $transactions_daily =
                 Transaction::with('cashier', 'billing')
@@ -71,12 +96,28 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
 
             $daily_sales = 0.00;
             $monthly_sales = 0.00;
+
             foreach ($transactions_daily as $transaction_daily) {
-                $daily_sales += $transaction_daily->billing->total;
+                $reading_date = Carbon::parse($transaction_daily->billing->reading_date);
+                $paid_at = Carbon::parse($transaction_daily->billing->paid_at);
+                $result = $reading_date->diffInWeeks($paid_at);
+
+                $payment = $transaction_daily->billing->price;
+                if ($result >= 1) {
+                    $payment = $transaction_daily->billing->price + (intval($result) * 50);
+                }
+                $daily_sales += $payment;
             }
 
             foreach ($transactions_monthly as $transaction_monthly) {
-                $monthly_sales += $transaction_monthly->billing->total;
+                $reading_date = Carbon::parse($transaction_monthly->billing->reading_date);
+                $paid_at = Carbon::parse($transaction_monthly->billing->paid_at);
+                $result = $reading_date->diffInWeeks($paid_at);
+                $payment = $transaction_monthly->billing->price;
+                if ($result >= 1) {
+                    $payment = $transaction_monthly->billing->price + (intval($result) * 50);
+                }
+                $monthly_sales += $payment;
             }
             // dd($daily_sales);
         }

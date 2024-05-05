@@ -80,6 +80,15 @@
                                     @foreach ($billings as $billing)
                                         @php
                                             $reading_date = Carbon\Carbon::parse($billing->reading_date);
+                                            $current_date = Carbon\Carbon::now()->setTimezone('Asia/Manila');
+                                            if ($billing->status == 'PAID') {
+                                                $current_date = Carbon\Carbon::parse($billing->paid_at);
+                                            }
+                                            $result = $reading_date->diffInWeeks($current_date);
+                                            $payment = $billing->price;
+                                            if ($result >= 1) {
+                                                $payment = $billing->price + intval($result) * 50;
+                                            }
                                         @endphp
                                         <tr>
                                             <td>{{ sprintf('%07d', $billing->id) }}</td>
@@ -91,7 +100,11 @@
                                             <td>{{ $billing->status }}</td>
                                             <td>{{ $billing->total_consumption }}</td>
                                             <td>{{ $billing->total }}</td>
-                                            <td>{{ $billing->after_due }}</td>
+                                            @if (intval($result) === 0)
+                                                <td>{{ $billing->after_due }}</td>
+                                            @else
+                                                <td>{{ number_format($payment, 2) }}</td>
+                                            @endif
                                             <td>
                                                 <a class="btn btn-dark" href="/billing/print/{{ $billing->id }}">Print</a>
                                             </td>

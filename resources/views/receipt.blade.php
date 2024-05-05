@@ -133,6 +133,19 @@
                 $reading_date = Carbon\Carbon::parse($billing->reading_date);
                 $due_date = Carbon\Carbon::parse($billing->due_date);
             @endphp
+
+            @php
+                $reading_date = Carbon\Carbon::parse($billing->reading_date);
+                $current_date = Carbon\Carbon::now()->setTimezone('Asia/Manila');
+                if ($billing->status == 'PAID') {
+                    $current_date = Carbon\Carbon::parse($billing->paid_at);
+                }
+                $result = $reading_date->diffInWeeks($current_date);
+                $payment = $billing->price;
+                if ($result >= 1) {
+                    $payment = $billing->price + intval($result) * 50;
+                }
+            @endphp
             <p style="margin-bottom: 8px"><span style="font-weight: bold">Bill No: </span>
                 {{ sprintf('%07d', $billing->id) }}</p>
             <p style="margin-bottom: 8px"><span style="font-weight: bold">Date Created:</span>
@@ -190,12 +203,19 @@
                     </div>
                     <div class="payment-details">
                         <span class="payment_title">Penalty After Due</span>
-                        <span class="payment_info">50</span>
+                        <span class="payment_info">{{ intval($result) === 0 ? 50 : intval($result) * 50 }}</span>
                     </div>
                     <div class="payment-details"
                         style="border-bottom: 2px solid black; padding-bottom: 8px; margin-bottom: 12px">
                         <span class="payment_title">Total Amount After Due</span>
-                        <span class="payment_info">{{ $billing->after_due }}</span>
+                        {{-- <span class="payment_info">{{ $billing->after_due }}</span> --}}
+                        @if (intval($result) === 0)
+                            <span class="payment_info"> {{ $billing->after_due }}
+                            </span>
+                        @else
+                            <span class="payment_info">{{ number_format($payment, 2) }}
+                            </span>
+                        @endif
                     </div>
 
                     @if ($billing->status === 'PAID')

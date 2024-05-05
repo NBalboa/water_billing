@@ -134,7 +134,18 @@ class BillingController extends Controller
     {
         $billing = Billing::with('consumer', 'collector')->findOrFail($id);
 
-        return view('profile.billing', ['billing' => $billing]);
+        $reading_date = Carbon::parse($billing->reading_date);
+        $current_date = Carbon::now()->setTimezone('Asia/Manila');
+
+        $result = $reading_date->diffInWeeks($current_date);
+        $payment = $billing->price;
+        if ($result >= 1) {
+            $payment = $billing->price + (intval($result) * 50);
+        }
+
+
+
+        return view('profile.billing', ['billing' => $billing, 'payment' => $payment, 'result' => $result]);
     }
 
     public function all()
@@ -228,6 +239,17 @@ class BillingController extends Controller
                 "change" => ['required']
             ]);
 
+            $reading_date = Carbon::parse($billing->reading_date);
+            $current_date = Carbon::now()->setTimezone('Asia/Manila');
+
+            $result = $reading_date->diffInWeeks($current_date);
+            if ($result >= 1) {
+                $payment = $billing->price + (intval($result) * 50);
+
+                if ($payment > $attributes['money']) {
+                    return redirect("/billing/{$id}")->withErrors(['money' => "Not enough money. Total payment is {$payment}"]);
+                }
+            }
 
             $attributes['status'] = "PAID";
             $attributes['paid_at'] = Carbon::now()->setTimezone('Asia/Manila');

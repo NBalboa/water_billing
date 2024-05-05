@@ -68,7 +68,8 @@
                             </div>
                             <div class="d-flex justify-content-between mx-5 my">
                                 <span class="font-weight-bold">Penalty</span>
-                                <span class="font-weight-bolder">50</span>
+                                <span
+                                    class="font-weight-bolder">{{ intval($result) === 0 ? 50 : intval($result) * 50 }}</span>
                             </div>
                             <div class="d-flex justify-content-between mx-5 my">
                                 <span class="font-weight-bold">Total Amount Due</span>
@@ -76,9 +77,17 @@
                             </div>
                             <div class="d-flex justify-content-between mx-5 my">
                                 <span class="font-weight-bold">Total Amount After Due</span>
-                                <span class="font-weight-bolder">{{ $billing->after_due }}</span>
+                                @if (intval($result) === 0)
+                                    <span class="font-weight-bolder"> {{ $billing->after_due }}
+                                    </span>
+                                @else
+                                    <span class="font-weight-bolder">{{ number_format($payment, 2) }}
+                                    </span>
+                                @endif
                             </div>
-
+                            @if (intval($result > 0 && $billing->status === 'PENDING'))
+                                <p>Note: <i>This billing is delayed by {{ intval($result) }} week/s</i></p>
+                            @endif
 
 
                             @if ($billing->status === 'PENDING')
@@ -89,11 +98,10 @@
                                         @csrf
                                         <div class="form-group">
                                             <input type="number" class="form-control" id="total" min="0"
-                                                value="{{ $billing->total }}" hidden readonly>
+                                                value="{{ $payment }}" hidden readonly>
                                             <label for="money">Money</label>
                                             <input type="number" class="form-control" id="money" name="money"
-                                                value="{{ old('money') }}"
-                                                min="{{ $after_due_date ? round($billing->after_due) : round($billing->total) }}">
+                                                value="{{ old('money') }}" min="{{ $payment }}">
                                             @error('money')
                                                 <p class="text-danger">{{ $message }}</p>
                                             @enderror
