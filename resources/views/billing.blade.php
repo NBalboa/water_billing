@@ -87,6 +87,9 @@
                                             $result = $reading_date->diffInWeeks($current_date);
                                             $payment = $billing->price;
                                             if ($result >= 1) {
+                                                if ($result > 8) {
+                                                    $result = 8;
+                                                }
                                                 $payment = $billing->price + intval($result) * 50;
                                             }
                                         @endphp
@@ -95,7 +98,8 @@
                                             </td>
                                             <td>{{ $reading_date->format('F j, Y g:i A') }}</td>
                                             <td>{{ $billing->consumer->meter_code }}</td>
-                                            <td>{{ $billing->consumer->first_name }}
+                                            <td class="{{ intval($result) >= 8 ? 'text-danger' : '' }}">
+                                                {{ $billing->consumer->first_name }}
                                                 {{ $billing->consumer->last_name }}</td>
                                             <td>{{ $billing->status }}</td>
                                             <td>{{ $billing->total_consumption }}</td>

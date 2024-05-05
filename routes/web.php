@@ -65,6 +65,9 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
 
                 $payment = $transaction_daily->price;
                 if ($result >= 1) {
+                    if ($result > 8) {
+                        $result = 8;
+                    }
                     $payment = $transaction_daily->price + (intval($result) * 50);
                 }
                 $daily_sales += $payment;
@@ -76,6 +79,9 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
                 $result = $reading_date->diffInWeeks($paid_at);
                 $payment = $transaction_monthly->price;
                 if ($result >= 1) {
+                    if ($result > 8) {
+                        $result = 8;
+                    }
                     $payment = $transaction_monthly->price + (intval($result) * 50);
                 }
                 $monthly_sales += $payment;
@@ -104,6 +110,9 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
 
                 $payment = $transaction_daily->billing->price;
                 if ($result >= 1) {
+                    if ($result > 8) {
+                        $result = 8;
+                    }
                     $payment = $transaction_daily->billing->price + (intval($result) * 50);
                 }
                 $daily_sales += $payment;
@@ -115,6 +124,9 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
                 $result = $reading_date->diffInWeeks($paid_at);
                 $payment = $transaction_monthly->billing->price;
                 if ($result >= 1) {
+                    if ($result > 8) {
+                        $result = 8;
+                    }
                     $payment = $transaction_monthly->billing->price + (intval($result) * 50);
                 }
                 $monthly_sales += $payment;

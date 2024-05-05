@@ -108,6 +108,32 @@ class DatabaseSeeder extends Seeder
                 'total' => 20.00,
                 'after_due' => 70.00,
                 'total_consumption' => 1
+            ],
+            [
+                'consumer_id' => 1,
+                'collector_id' => 2,
+                'reading_date' => Carbon::now()->subMonths(2),
+                'due_date' => Carbon::now(),
+                'previos' => 2,
+                'current' => 3,
+                'status' => 'PENDING',
+                'price' => 20.00,
+                'total' => 20.00,
+                'after_due' => 70.00,
+                'total_consumption' => 1
+            ],
+            [
+                'consumer_id' => 1,
+                'collector_id' => 2,
+                'reading_date' => Carbon::now()->subMonths(3),
+                'due_date' => Carbon::now(),
+                'previos' => 2,
+                'current' => 3,
+                'status' => 'PENDING',
+                'price' => 20.00,
+                'total' => 20.00,
+                'after_due' => 70.00,
+                'total_consumption' => 1
             ]
         ];
 

@@ -140,6 +140,9 @@ class BillingController extends Controller
         $result = $reading_date->diffInWeeks($current_date);
         $payment = $billing->price;
         if ($result >= 1) {
+            if ($result > 8) {
+                $result = 8;
+            }
             $payment = $billing->price + (intval($result) * 50);
         }
 
@@ -244,6 +247,9 @@ class BillingController extends Controller
 
             $result = $reading_date->diffInWeeks($current_date);
             if ($result >= 1) {
+                if ($result > 8) {
+                    $result = 8;
+                }
                 $payment = $billing->price + (intval($result) * 50);
 
                 if ($payment > $attributes['money']) {
