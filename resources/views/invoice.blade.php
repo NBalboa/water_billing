@@ -21,7 +21,7 @@
                         <form method="GET" action="#">
                             <div class="input-group input-group-sm" style="width: 150px;">
                                 <input type="text" name="table_search" class="form-control float-right"
-                                    placeholder="Search Bill No.">
+                                    placeholder="Search Bill No." id="invoice_search">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fas fa-search"></i>
@@ -46,7 +46,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="invoice_result">
                             @if ($billings->isEmpty())
                                 <tr>
                                     <td>No Invoices Found</td>

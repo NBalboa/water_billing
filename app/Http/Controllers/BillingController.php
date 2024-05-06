@@ -280,6 +280,48 @@ class BillingController extends Controller
         return view('invoice', ['billings' => $billings]);
     }
 
+    public function invoices_search($search)
+    {
+
+        if ($search !== null && $search !== 'all') {
+
+            $billings = Billing::with('consumer')->where('status', 'PENDING')
+                ->where('id', intval($search));
+        } else {
+            $billings = Billing::with('consumer')
+                ->where('status', 'PENDING');
+        }
+
+        $billings = $billings->get();
+
+        $output = "";
+
+        foreach ($billings as $billing) {
+            $reading_date = Carbon::parse($billing->reading_date);
+
+            $output .=
+                '
+                <tr>
+                    <td>' . sprintf('%07d', $billing->id) . '</td>
+                    <td>' . $billing->consumer->meter_code . '</td>
+                    <td>' . $billing->consumer->first_name . '
+                        ' . $billing->consumer->last_name . '</td>
+                    <td>' . $billing->status . '</td>
+                    <td>' . $billing->total_consumption . '</td>
+                    <td>' . $billing->total . '</td>
+                    <td>' . $billing->after_due . '</td>
+                    <td>
+                        <a href="/billing/' . $billing->id . '" class="btn btn-info text-right">
+                            Pay
+                        </a>
+                    </td>
+                </tr>
+            ';
+        }
+
+        return response($output);
+    }
+
     public function print($id)
     {
         $billing = Billing::with('consumer', 'collector')->findOrFail($id);

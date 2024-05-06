@@ -144,6 +144,9 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
         ]);
     });
     Route::get('billing/invoice', [BillingController::class, 'invoices']);
+
+    Route::get('billing/invoice/search/{search}', [BillingController::class, 'invoices_search']);
+
     Route::get('billing/{billing_id}', [BillingController::class, 'billing']);
     Route::get('billing/search/{search}', [BillingController::class, 'billing_search']);
 
