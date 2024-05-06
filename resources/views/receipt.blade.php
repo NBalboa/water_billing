@@ -242,9 +242,9 @@
                 <a href="/all/billings" id="back">Back</a>
             @else
                 @if (auth()->user()->status == 1)
-                    <a href="/consumer/{{ $billing->consumer->id }}" id="back">Back</a>
+                    <a href="/consumer" id="back">Back</a>
                 @else
-                    <a href="/billing/{{ $billing->id }}" id="back">Back</a>
+                    <a href="/billing/invoice" id="back">Back</a>
                 @endif
             @endif
         @endauth

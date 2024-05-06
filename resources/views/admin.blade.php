@@ -20,6 +20,7 @@
     <script src="/js/billing.js"></script>
     <script src="/js/pay.js"></script>
     <script src="/js/consumer_search.js"></script>
+    <script src="/js/transaction_search.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">

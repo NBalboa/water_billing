@@ -20,7 +20,7 @@
                         <form method="GET" action="#">
                             <div class="input-group input-group-sm" style="width: 150px;">
                                 <input type="text" name="table_search" class="form-control float-right"
-                                    placeholder="Search Bill No./Transaction No.">
+                                    id="transaction_search" placeholder="Search Bill No./Transaction No.">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fas fa-search"></i>
@@ -43,7 +43,7 @@
                                 <th>Consumer Name</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="transaction_result">
                             @if ($transactions->isEmpty())
                                 <tr>
                                     <td>No Reports Found</td>

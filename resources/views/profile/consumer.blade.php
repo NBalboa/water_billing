@@ -93,10 +93,10 @@
                                             <td><strong>₱ </strong>{{ $billing->price }}</td>
                                             <td><strong>₱ </strong>{{ $billing->after_due }}</td>
                                             <td><strong>₱ </strong>{{ $billing->total }}</td>
-                                            <td>
+                                            {{-- <td>
                                                 @auth
-                                                    @if (auth()->user()->status == 0)
-                                                        {{-- <form action="/billing/delete/{{ $billing->id }}" method="POST"
+                                                    @if (auth()->user()->status == 0) --}}
+                                            {{-- <form action="/billing/delete/{{ $billing->id }}" method="POST"
                                                             style="display: inline-block">
                                                             @csrf
                                                             <button class="btn btn-danger" type="submit">Delete</button>
@@ -106,7 +106,7 @@
                                                         </a>
                                                         <a href="/billing/edit/{{ $billing->id }}"
                                                             class="btn btn-default">Edit</a> --}}
-                                                    @endif
+                                            {{-- @endif
 
                                                     @if (auth()->user()->status == 2)
                                                         @if ($billing->status == 'PENDING')
@@ -116,10 +116,17 @@
                                                             </a>
                                                         @endif
                                                     @endif
-                                                    <a class="btn btn-dark" href="/billing/print/{{ $billing->id }}">Print</a>
                                                 @endauth
 
-                                            </td>
+                                            </td> --}}
+                                            @if (auth()->user()->status == 1)
+                                                <td>
+                                                    <a class="btn btn-dark"
+                                                        href="/billing/print/{{ $billing->id }}">Print</a>
+
+                                                </td>
+                                            @endif
+
                                         </tr>
                                     @endforeach
                                 @endif

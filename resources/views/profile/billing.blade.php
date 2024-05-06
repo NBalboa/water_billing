@@ -119,7 +119,7 @@
                                 @endif
                             @else
                                 <div class="d-flex justify-content-between mx-5 my">
-                                    <span class="font-weight-bold">Money</span>
+                                    <span class="font-weight-bold">Amount</span>
                                     <span class="font-weight-bolder">{{ $billing->money }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between mx-5 my">
