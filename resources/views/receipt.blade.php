@@ -132,6 +132,7 @@
             @php
                 $reading_date = Carbon\Carbon::parse($billing->reading_date);
                 $due_date = Carbon\Carbon::parse($billing->due_date);
+                $cut_off = $reading_date->addWeeks(8);
             @endphp
 
             @php
@@ -220,6 +221,12 @@
                             </span>
                         @endif
                     </div>
+                    @if ($billing->status === 'PENDING')
+                        <div>
+                            <p>Note: <i>Every consecutive weeks delayed payment by after due date the penalty will add
+                                    by 50. cut off date: {{ $cut_off->format('F j, Y g:i A') }}</i></p>
+                        </div>
+                    @endif
 
                     @if ($billing->status === 'PAID')
                         <div class="payment-details">
