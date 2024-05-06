@@ -314,22 +314,52 @@ class BillingController extends Controller
 
             $output .=
                 '
-                <tr>
-                    <td>' . sprintf('%07d', $billing->id) . '</td>
-                    <td>' . $billing->consumer->meter_code . '</td>
-                    <td>' . $billing->consumer->first_name . '
-                        ' . $billing->consumer->last_name . '</td>
-                    <td>' . $billing->status . '</td>
-                    <td>' . $billing->total_consumption . '</td>
-                    <td>' . $billing->total . '</td>
-                    <td>' . $billing->after_due . '</td>
-                    <td>
-                        <a href="/billing/' . $billing->id . '" class="btn btn-info text-right">
-                            Pay
-                        </a>
-                    </td>
-                </tr>
-            ';
+                <div class="col-md-3">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Consumer</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <p><span class="font-weight-bold">Billing No :
+                                </span>' . sprintf('%07d', $billing->id) . '</p>
+                            <p><span class="font-weight-bold">Meter Code :
+                                </span>' . $billing->consumer->meter_code . '</p>
+                            <p><span class="font-weight-bold">Consumer Name :
+                                </span>' . $billing->consumer->first_name . '
+                                ' . $billing->consumer->last_name . '</p>
+                            <p><span class="font-weight-bold">Status : </span>' . $billing->status . '</p>
+                            <p><span class="font-weight-bold">Total Consumption :
+                                </span>' . $billing->total_consumption . '</p>
+                            <p><span class="font-weight-bold">Total : </span>' . $billing->total . '</p>
+                            <p><span class="font-weight-bold">Total Amount After Due :
+                                </span>' . $billing->after_due . '</p>
+
+                        </div>
+                        <div class="card-footer">
+                            <a href="/billing/' . $billing->id . '" class="btn btn-info text-right">
+                                Pay
+                            </a>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                ';
+            // <tr>
+            //     <td>' . sprintf('%07d', $billing->id) . '</td>
+            //     <td>' . $billing->consumer->meter_code . '</td>
+            //     <td>' . $billing->consumer->first_name . '
+            //         ' . $billing->consumer->last_name . '</td>
+            //     <td>' . $billing->status . '</td>
+            //     <td>' . $billing->total_consumption . '</td>
+            //     <td>' . $billing->total . '</td>
+            //     <td>' . $billing->after_due . '</td>
+            //     <td>
+            //         <a href="/billing/' . $billing->id . '" class="btn btn-info text-right">
+            //             Pay
+            //         </a>
+            //     </td>
+            // </tr>
         }
 
         return response($output);

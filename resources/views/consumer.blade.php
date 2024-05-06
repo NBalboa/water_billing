@@ -4,81 +4,54 @@
     <div class="content-wrapper">
         <section class="content-header">
             <section class="content">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Consumer</h3>
-                        <div class="card-tools">
-                            <form method="GET" action="#">
-                                <div class="input-group input-group-sm" style="width: 150px;">
-                                    <input type="text" name="table_search" id="consumer_search"
-                                        class="form-control float-right" placeholder="Search">
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-default">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                <div class="mb-3">
+                    <form method="GET" action="#">
+                        <div class="input-group input-group-sm" style="width: 100%;">
+                            <input type="text" name="table_search" id="consumer_search" class="form-control float-right"
+                                placeholder="Search">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
                         </div>
-
-
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-hover text-nowrap">
-                            <thead>
-                                <tr>
-                                    <th>Meter Code</th>
-                                    <th>Name</th>
-                                    <th>Phone No.</th>
-                                    <th>Address</th>
-                                </tr>
-                            </thead>
-                            <tbody id="consumer_result">
-                                @if ($consumers->isEmpty())
-                                    <tr>
-                                        <td>No Consumer Yet</td>
-                                    </tr>
-                                @else
-                                    {{-- <p>Not Empty</p> --}}
-                                    @foreach ($consumers as $consumer)
-                                        <tr>
-                                            <td>
-                                                {{ $consumer->meter_code }}
-                                            </td>
-                                            <td>
-                                                <a href="/consumer/{{ $consumer->id }} " class="text-dark">
-                                                    {{ $consumer->first_name }} {{ $consumer->last_name }}
-                                                </a>
-                                            </td>
-                                            <td>{{ $consumer->phone_no }}</td>
-                                            <td>{{ $consumer->street }}, {{ $consumer->barangay }}</td>
-                                        </tr>
-
-                                        {{-- <td>
-                                                <a href="/consumer/{{ $consumer->id }}" class="btn btn-info">View</a>
-
-                                                @auth
-                                                    @if (auth()->user()->status == 0)
-                                                        <form action="/admin/consumer/delete/{{ $consumer->id }}" method="POST"
-                                                            style="display: inline-block">
-                                                            @csrf
-                                                            <button class="btn btn-danger" type="submit">Delete</button>
-                                                        </form>
-                                                        <a href="/admin/consumer/edit/{{ $consumer->id }}"
-                                                            class="btn btn-default">Edit</a>
-                                                    @endauth
-                                                @endif
-
-
-                                            </td> --}}
-                                    @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- /.card-body -->
+                    </form>
                 </div>
+                <div class="row" id="consumer_result">
+
+                    @if ($consumers->isEmpty())
+                        <p>No Consumer Yet</p>
+                    @else
+                        {{-- <p>Not Empty</p> --}}
+                        @foreach ($consumers as $consumer)
+                            <div class="col-md-3">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Consumer</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><span class="font-weight-bold">Meter Code : </span>
+                                            {{ $consumer->meter_code }}
+                                        </p>
+                                        <p>
+                                            <span class="font-weight-bold">Consumer Name : </span>
+                                            <a href="/consumer/{{ $consumer->id }} " class="text-dark">
+                                                {{ $consumer->first_name }} {{ $consumer->last_name }}
+                                            </a>
+                                        </p>
+                                        <p><span class="font-weight-bold">Phono No : </span>{{ $consumer->phone_no }} </p>
+                                        <p><span class="font-weight-bold">Address : </span>{{ $consumer->street }},
+                                            {{ $consumer->barangay }}</p>
+
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+
+                </div>
+
                 @if (method_exists($consumers, 'links'))
                     <div class="d-flex justify-content-center">
                         {{ $consumers->links('pagination::bootstrap-4') }}

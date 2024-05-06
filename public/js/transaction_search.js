@@ -15,7 +15,6 @@ $(document).ready(function () {
             $.get(
                 `http://127.0.0.1:8000/transactions/search/all`,
                 function (data) {
-                    console.log(data);
                     $("#transaction_result").html(data);
                 }
             );

@@ -75,17 +75,38 @@ class ConsumerController extends Controller
 
         foreach ($consumers as $consumer) {
             $output .= '
-        <tr>
-            <td>' . $consumer->meter_code . '</td>
-            <td>
-                <a href="/consumer/' . $consumer->id . ' " class="text-dark">
-                    ' . $consumer->first_name . ' ' . $consumer->last_name . '
-                </a>
-            </td>
-            <td>' . $consumer->phone_no . '</td>
-            <td>' . $consumer->street . ', ' . $consumer->barangay . '</td>
-        </tr>
-        ';
+             <div class="col-md-3">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Consumer</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><span class="font-weight-bold">Meter Code : </span>
+                            ' . $consumer->meter_code . '
+                        </p>
+                        <p>
+                            <span class="font-weight-bold">Consumer Name : </span>
+                            <a href="/consumer/' . $consumer->id . ' " class="text-dark">
+                                ' . $consumer->first_name . ' ' . $consumer->last_name . '
+                            </a>
+                        </p>
+                        <p><span class="font-weight-bold">Address : </span>' . $consumer->phone_no . '</p>
+                        <p>' . $consumer->street . ', ' . $consumer->barangay . '</p>
+
+                    </div>
+                </div>
+            </div>
+            ';
+            // <tr>
+            //     <td>' . $consumer->meter_code . '</td>
+            //     <td>
+            //         <a href="/consumer/' . $consumer->id . ' " class="text-dark">
+            //             ' . $consumer->first_name . ' ' . $consumer->last_name . '
+            //         </a>
+            //     </td>
+            //     <td>' . $consumer->phone_no . '</td>
+            //     <td>' . $consumer->street . ', ' . $consumer->barangay . '</td>
+            // </tr>
         }
 
         return response($output);

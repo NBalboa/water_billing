@@ -13,62 +13,57 @@
             </div>
         </section>
         <section class="content">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Reports</h3>
-                    <div class="card-tools">
-                        <form method="GET" action="#">
-                            <div class="input-group input-group-sm" style="width: 150px;">
-                                <input type="text" name="table_search" class="form-control float-right"
-                                    id="transaction_search" placeholder="Search Bill No./Transaction No.">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+            <div class="mb-3">
+                <form method="GET" action="#">
+                    <div class="input-group input-group-sm" style="width: 100%;">
+                        <input type="text" name="table_search" class="form-control float-right" id="transaction_search"
+                            placeholder="Search Bill No./Transaction No.">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>Transaction No.</th>
-                                <th>Billing No.</th>
-                                <th>Paid At</th>
-                                <th>Money</th>
-                                <th>Change</th>
-                                <th>Cashier Name</th>
-                                <th>Consumer Name</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transaction_result">
-                            @if ($transactions->isEmpty())
-                                <tr>
-                                    <td>No Reports Found</td>
-                                </tr>
-                            @else
-                                @foreach ($transactions as $transaction)
-                                    @php
-                                        $paid_at = Carbon\Carbon::parse($transaction->billing->paid_at);
-                                    @endphp
-                                    <tr>
-                                        <td>{{ sprintf('%07d', $transaction->id) }}</td>
-                                        <td>{{ sprintf('%07d', $transaction->billing->id) }}</td>
-                                        <td>{{ $paid_at->format('F j, Y g:i A') }}</td>
-                                        <td>{{ $transaction->billing->money }}</td>
-                                        <td>{{ $transaction->billing->change }}</td>
-                                        <td>{{ $transaction->cashier->first_name }}
-                                            {{ $transaction->cashier->last_name }}</td>
-                                        <td>{{ $transaction->billing->consumer->first_name }}
-                                            {{ $transaction->billing->consumer->last_name }}</td>
-                                    </tr>
-                                @endforeach
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
+                </form>
+            </div>
+            <div class="row" id="transaction_result">
+                @if ($transactions->isEmpty())
+                    <p>No Reports Found</p>
+                @else
+                    @foreach ($transactions as $transaction)
+                        @php
+                            $paid_at = Carbon\Carbon::parse($transaction->billing->paid_at);
+                        @endphp
+                        <div class="col-md-3">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">Transaction</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p><span class="font-weight-bold">Transaction
+                                            No: </span>{{ sprintf('%07d', $transaction->id) }}</p>
+                                    <p><span class="font-weight-bold">Billing No:
+                                        </span>{{ sprintf('%07d', $transaction->billing->id) }}</p>
+                                    <p><span class="font-weight-bold">Cashier:
+                                        </span>{{ $transaction->cashier->first_name }}
+                                        {{ $transaction->cashier->last_name }}</p>
+                                    <p><span class="font-weight-bold">Consumer:
+                                        </span>{{ $transaction->billing->consumer->first_name }}
+                                        {{ $transaction->billing->consumer->last_name }}</p>
+                                    <p><span class="font-weight-bold">Paid: </span>{{ $paid_at->format('F j, Y g:i A') }}
+                                    </p>
+                                    <p><span class="font-weight-bold">Amount: </span>{{ $transaction->billing->money }}</p>
+                                    <p><span class="font-weight-bold">Change: </span>{{ $transaction->billing->change }}</p>
+
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+
+            </div>
+
 
         </section>
         @if (method_exists($transactions, 'links'))

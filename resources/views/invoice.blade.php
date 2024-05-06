@@ -14,21 +14,65 @@
             </div>
         </section>
         <section class="content">
-            <div class="card">
+            <div class="mb-3">
+                <form method="GET" action="#">
+                    <div class="input-group input-group-sm" style="width: 100%;">
+                        <input type="text" name="table_search" class="form-control float-right"
+                            placeholder="Search Bill No." id="invoice_search">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row" id="invoice_result">
+                @if ($billings->isEmpty())
+                    <p>No Invoices Found</p>
+                @else
+                    @foreach ($billings as $billing)
+                        @php
+                            $reading_date = Carbon\Carbon::parse($billing->reading_date);
+                        @endphp
+                        <div class="col-md-3">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">Consumer</h3>
+                                </div>
+                                <div class="card-body">
+
+                                    <p><span class="font-weight-bold">Billing No :
+                                        </span>{{ sprintf('%07d', $billing->id) }}</p>
+                                    <p><span class="font-weight-bold">Meter Code :
+                                        </span>{{ $billing->consumer->meter_code }}</p>
+                                    <p><span class="font-weight-bold">Consumer Name :
+                                        </span>{{ $billing->consumer->first_name }}
+                                        {{ $billing->consumer->last_name }}</p>
+                                    <p><span class="font-weight-bold">Status : </span>{{ $billing->status }}</p>
+                                    <p><span class="font-weight-bold">Total Consumption :
+                                        </span>{{ $billing->total_consumption }}</p>
+                                    <p><span class="font-weight-bold">Total : </span>{{ $billing->total }}</p>
+                                    <p><span class="font-weight-bold">Total Amount After Due :
+                                        </span>{{ $billing->after_due }}</p>
+
+                                </div>
+                                <div class="card-footer">
+                                    <a href="/billing/{{ $billing->id }}" class="btn btn-info text-right">
+                                        Pay
+                                    </a>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+            {{-- <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Reports</h3>
                     <div class="card-tools">
-                        <form method="GET" action="#">
-                            <div class="input-group input-group-sm" style="width: 150px;">
-                                <input type="text" name="table_search" class="form-control float-right"
-                                    placeholder="Search Bill No." id="invoice_search">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -46,7 +90,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="invoice_result">
+                        <tbody>
                             @if ($billings->isEmpty())
                                 <tr>
                                     <td>No Invoices Found</td>
@@ -79,7 +123,7 @@
                     </table>
                 </div>
                 <!-- /.card-body -->
-            </div>
+            </div> --}}
         </section>
         @if (method_exists($billings, 'links'))
             <div class="d-flex justify-content-center">

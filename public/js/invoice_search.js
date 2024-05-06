@@ -14,7 +14,6 @@ $(document).ready(function () {
             $.get(
                 `http://127.0.0.1:8000/billing/invoice/search/all`,
                 function (data) {
-                    console.log(data);
                     $("#invoice_result").html(data);
                 }
             );
