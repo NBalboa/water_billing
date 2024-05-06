@@ -238,25 +238,38 @@ class BillingController extends Controller
                 }
                 $payment = $billing->price + intval($result) * 50;
             }
-            $output .=
 
-                '
-                    <tr>
-                        <td>' . sprintf('%07d', $billing->id) . '</td>
-                        <td>' . $reading_date->format('F j, Y g:i A') . '</td>
-                        <td>' . $billing->consumer->meter_code . '</td>
-                        <td class="' . (intval($result) >= 8 ? 'text-danger' : '') . '">
+            $output .= '
+             <div class="col-md-3">
+                <div
+                    class="card ' . (intval($result) >= 8 && $billing->status === 'PENDING' ? 'card-danger' : 'card-primary') . '">
+                    <div class="card-header">
+                        <h3 class="card-title">Billing</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><span class="font-weight-bold">ID:</span> ' . sprintf('%07d', $billing->id) . '
+                        </p>
+                        <p><span class="font-weight-bold">Reading Date:</span>
+                            ' . $reading_date->format('F j, Y g:i A') . '</p>
+                        <p><span class="font-weight-bold">Meter Code:</span>
+                            ' . $billing->consumer->meter_code . '</p>
+                        <p><span class="font-weight-bold">Consumer Name:</span>
                             ' . $billing->consumer->first_name . '
-                            ' . $billing->consumer->last_name . '</td>
-                        <td>' . $billing->status . '</td>
-                        <td>' . $billing->total_consumption . '</td>
-                        <td>' . $billing->total . '</td>
-                        <td>' . (intval($result) === 0 ? $billing->after_due : number_format($payment, 2)) . '</td>
-                        
-                        <td>
-                            <a class="btn btn-dark" href="/billing/print/' . $billing->id . '">Print</a>
-                        </td>
-                    </tr>
+                            ' . $billing->consumer->last_name . '</p>
+                        <p><span class="font-weight-bold">Status:</span> ' . $billing->status . '</p>
+                        <p><span class="font-weight-bold">Total Consumption:</span>
+                            ' . $billing->total_consumption . '</p>
+                        <p><span class="font-weight-bold">Total:</span> ' . $billing->total . '</p>
+                        <p><span class="font-weight-bold">Total Amount After Due:</span>
+                            ' . (intval($result) === 0 ? $billing->after_due : number_format($payment, 2)) . '
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-dark" href="/billing/print/' . $billing->id . '">Print</a>
+                    </div>
+                   
+                </div>
+            </div>
             ';
         }
 
