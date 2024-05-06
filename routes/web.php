@@ -145,6 +145,7 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
     });
     Route::get('billing/invoice', [BillingController::class, 'invoices']);
     Route::get('billing/{billing_id}', [BillingController::class, 'billing']);
+    Route::get('billing/search/{search}', [BillingController::class, 'billing_search']);
 
     Route::post('billing/pay/{billing_id}', [BillingController::class, 'pay']);
 

@@ -205,6 +205,64 @@ class BillingController extends Controller
         return view('billing', ['billings' => $billings, 'years' => $years]);
     }
 
+    public function billing_search($search)
+    {
+        $billings = Billing::with('consumer', 'collector');
+
+        if ($search !== null && $search !== 'all') {
+
+            $billings->orWhere('id', intval($search))
+                ->orWhereHas(
+                    'consumer',
+                    function ($query) use ($search) {
+                        $query->whereAny(['meter_code', 'first_name', 'last_name'], 'LIKE', '%' . $search . '%');
+                    }
+                );
+        }
+
+
+        $billings = $billings->get();
+        $output = "";
+
+        foreach ($billings as $billing) {
+            $reading_date = Carbon::parse($billing->reading_date);
+            $current_date = Carbon::now()->setTimezone('Asia/Manila');
+            if ($billing->status == 'PAID') {
+                $current_date = Carbon::parse($billing->paid_at);
+            }
+            $result = $reading_date->diffInWeeks($current_date);
+            $payment = $billing->price;
+            if ($result >= 1) {
+                if ($result > 8) {
+                    $result = 8;
+                }
+                $payment = $billing->price + intval($result) * 50;
+            }
+            $output .=
+
+                '
+                    <tr>
+                        <td>' . sprintf('%07d', $billing->id) . '</td>
+                        <td>' . $reading_date->format('F j, Y g:i A') . '</td>
+                        <td>' . $billing->consumer->meter_code . '</td>
+                        <td class="' . (intval($result) >= 8 ? 'text-danger' : '') . '">
+                            ' . $billing->consumer->first_name . '
+                            ' . $billing->consumer->last_name . '</td>
+                        <td>' . $billing->status . '</td>
+                        <td>' . $billing->total_consumption . '</td>
+                        <td>' . $billing->total . '</td>
+                        <td>' . (intval($result) === 0 ? $billing->after_due : number_format($payment, 2)) . '</td>
+                        
+                        <td>
+                            <a class="btn btn-dark" href="/billing/print/' . $billing->id . '">Print</a>
+                        </td>
+                    </tr>
+            ';
+        }
+
+        return response($output);
+    }
+
     public function invoices()
     {
         $search = request('table_search');

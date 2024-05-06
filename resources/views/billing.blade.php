@@ -39,7 +39,7 @@
                                 <label for="paid" class="mr-2">Paid</label>
                             </div>
                             <div class="form-group mr-2">
-                                <input type="text" name="search" placeholder="Search ..." />
+                                <input type="text" name="search" placeholder="Search ..." id="billing_search" />
                             </div>
 
                             <div class="form-group">
@@ -71,7 +71,7 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="billing_result">
                                 @if ($billings->isEmpty())
                                     <tr>
                                         <td>No Reports Found</td>
@@ -95,7 +95,6 @@
                                         @endphp
                                         <tr>
                                             <td>{{ sprintf('%07d', $billing->id) }}</td>
-                                            </td>
                                             <td>{{ $reading_date->format('F j, Y g:i A') }}</td>
                                             <td>{{ $billing->consumer->meter_code }}</td>
                                             <td class="{{ intval($result) >= 8 ? 'text-danger' : '' }}">
