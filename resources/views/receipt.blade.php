@@ -222,9 +222,16 @@
                         @endif
                     </div>
                     @if ($billing->status === 'PENDING')
-                        <div>
-                            <p>Note: <i>Every consecutive weeks delayed payment by after due date the penalty will add
-                                    by 50. cut off date: {{ $cut_off->format('F j, Y g:i A') }}</i></p>
+                        <div>Reminders:</p>
+                            <ol style="margin-left: 15px; margin-top: 10px;">
+                                <li>Disconnection Date {{ $cut_off->format('F j, Y g:i A') }}</i></li>
+                                <li>This bill also serve as Notice of Disconnection</li>
+                                <li>Not valid as official receipt</li>
+                                <li>This is final if no complaint is received afte</li>
+                            </ol>
+                            <p>Please present this statement when paying your water bill</p>
+                            {{-- <p>Note: <i>Every consecutive weeks delayed payment by after due date the penalty will add
+                                    by 50. cut off date: {{ $cut_off->format('F j, Y g:i A') }}</i></p> --}}
                         </div>
                     @endif
 
