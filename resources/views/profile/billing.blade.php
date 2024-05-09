@@ -85,7 +85,7 @@
                                     </span>
                                 @endif
                             </div>
-                            @if (intval($result > 0 && $billing->status === 'PENDING'))
+                            @if (intval($result >= 1 && $billing->status === 'PENDING'))
                                 <p>Note: <i>This billing is delayed by {{ intval($result) }} week/s</i></p>
                             @endif
 

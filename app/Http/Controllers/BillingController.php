@@ -147,7 +147,6 @@ class BillingController extends Controller
         }
 
 
-
         return view('profile.billing', ['billing' => $billing, 'payment' => $payment, 'result' => $result]);
     }
 
