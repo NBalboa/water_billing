@@ -24,7 +24,7 @@ class Billing extends Model
         'source_charges',
         'total',
         'paid_at',
-        'money',
+        'amount',
         'change'
     ];
 

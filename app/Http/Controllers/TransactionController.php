@@ -97,7 +97,7 @@ class TransactionController extends Controller
                             ' . $transaction->billing->consumer->last_name . '</p>
                         <p><span class="font-weight-bold">Paid: </span>' . $paid_at->format('F j, Y g:i A') . '
                         </p>
-                        <p><span class="font-weight-bold">Amount: </span>' . $transaction->billing->money . '</p>
+                        <p><span class="font-weight-bold">Amount: </span>' . $transaction->billing->amount . '</p>
                         <p><span class="font-weight-bold">Change: </span>' . $transaction->billing->change . '</p>
 
                     </div>
