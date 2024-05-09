@@ -25,26 +25,46 @@
                         {{-- <p>Not Empty</p> --}}
                         @foreach ($consumers as $consumer)
                             <div class="col-md-3">
-                                <div class="card card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Consumer</h3>
+
+                                <div class="card card-primary ">
+
+                                    <div class="card-header bg-primary">
+                                        <a href="/consumer/{{ $consumer->id }}">
+                                            <h3 class="card-title text-white ">Consumer</h3>
+                                        </a>
+
+
                                     </div>
                                     <div class="card-body">
-                                        <p><span class="font-weight-bold">Meter Code : </span>
-                                            {{ $consumer->meter_code }}
-                                        </p>
-                                        <p>
-                                            <span class="font-weight-bold">Consumer Name : </span>
-                                            <a href="/consumer/{{ $consumer->id }} " class="text-dark">
+                                        <a href="/consumer/{{ $consumer->id }}">
+                                            <p class="text-dark"><span class="font-weight-bold">Meter Code : </span>
+                                                {{ $consumer->meter_code }}
+                                            </p>
+                                        </a>
+                                        <a href="/consumer/{{ $consumer->id }}">
+                                            <p class="text-dark">
+                                                <span class="font-weight-bold text-dark">Consumer Name : </span>
+                                                {{-- <a href="/consumer/{{ $consumer->id }} " class="text-dark"> --}}
                                                 {{ $consumer->first_name }} {{ $consumer->last_name }}
-                                            </a>
-                                        </p>
-                                        <p><span class="font-weight-bold">Phono No : </span>{{ $consumer->phone_no }} </p>
-                                        <p><span class="font-weight-bold">Address : </span>{{ $consumer->street }},
-                                            {{ $consumer->barangay }}</p>
+                                                {{-- </a> --}}
+                                            </p>
+                                        </a>
+                                        <a href="/consumer/{{ $consumer->id }}">
+
+                                            <p class="text-dark"><span class="font-weight-bold">Phono No :
+                                                </span>{{ $consumer->phone_no }}
+                                            </p>
+                                        </a>
+                                        <a href="/consumer/{{ $consumer->id }}">
+                                            <p class="text-dark"><span class="font-weight-bold">Address :
+                                                </span>{{ $consumer->street }},
+                                                {{ $consumer->barangay }}</p>
+                                        </a>
 
                                     </div>
                                     <!-- /.card-body -->
+                                    {{-- </a> --}}
+
                                 </div>
                             </div>
                         @endforeach
