@@ -152,11 +152,10 @@ class BillingController extends Controller
 
     public function all()
     {
+        $billings = Billing::with('consumer', 'collector');
 
-        $attributes = request()->all();
+
         if (request()->has('search')) {
-            $billings = Billing::with('consumer', 'collector');
-
             if (request()->has('search') && request()->search != null) {
                 $search = request()->search;
                 $billings->orWhere('id', intval($search))
@@ -178,8 +177,6 @@ class BillingController extends Controller
                             $query->whereAny(['meter_code', 'first_name', 'last_name'], 'LIKE', '%' . $search . '%');
                         });
                     });
-            } else if (request()->status == 'on' && request()->search == null) {
-                return redirect('/all/billings');
             } else {
                 if (request()->has('year') && request()->year != null) {
                     $billings->whereYear('reading_date', request()->year);
@@ -199,9 +196,47 @@ class BillingController extends Controller
         } else {
             $billings = Billing::with('consumer', 'collector')->latest()->paginate(5);
         }
+
+
+        $pendings = Billing::with("consumer", "collector")
+            ->where("status", "PENDING")->get();
+        $disconnections = [];
+        foreach ($pendings as $pending) {
+            $reading_date = Carbon::parse($pending->reading_date);
+            $current_date = Carbon::now()->setTimezone("Asia/Manila");
+
+            if ($reading_date->diffInWeeks($current_date) >= 8) {
+                array_push($disconnections, $pending);
+            }
+        }
+
+        // dd($disconnections);
+
+
+        // dd($disconnections);
         $years = Billing::getYears();
 
-        return view('billing', ['billings' => $billings, 'years' => $years]);
+        return view('billing', ['billings' => $billings, 'years' => $years, 'disconnections' => $disconnections]);
+    }
+
+    public function print_disconnection()
+    {
+        $pendings = Billing::with("consumer", "collector")
+            ->where("status", "PENDING")->get();
+        $disconnections = [];
+        foreach ($pendings as $pending) {
+            $reading_date = Carbon::parse($pending->reading_date);
+            $current_date = Carbon::now()->setTimezone("Asia/Manila");
+
+            if ($reading_date->diffInWeeks($current_date) >= 8) {
+                array_push($disconnections, $pending);
+            }
+        }
+        if (count($disconnections) == 0) {
+            return redirect("/all/billings");
+        }
+
+        return view('print.disconnections', ['billings' => $disconnections]);
     }
 
     public function billing_search($search)
@@ -405,7 +440,7 @@ class BillingController extends Controller
             Transaction::create(['billing_id' => $billing->id, 'cashier_id' => auth()->user()->id]);
         }
 
-        return redirect("/billing/print/{$id}");
+        return redirect("/transaction/print/{$id}");
     }
 
 

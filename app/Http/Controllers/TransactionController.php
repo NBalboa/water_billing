@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Billing;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,6 +15,8 @@ class TransactionController extends Controller
 
     public function all()
     {
+        $transactions = Transaction::with('billing', 'cashier');
+
 
         if (request()->has('table_search') && request('table_search') != null) {
             $search  = request('table_search');
@@ -22,47 +25,82 @@ class TransactionController extends Controller
                 ->where('id', intval($search))
                 ->orWhere('billing_id', intval($search));
 
+            if (request()->has("month") && request()->month != null) {
+                $month = request()->month;
+                $transactions->whereHas('billing', function ($query) use ($month) {
+                    $query->whereMonth('paid_at', $month);
+                });
+            }
+
+            if (request()->has("year") && request()->year != null) {
+                $year = request()->year;
+                $transactions->whereHas('billing', function ($query) use ($year) {
+                    $query->whereYear('paid_at', $year);
+                });
+            }
+
             $transactions = $transactions->get();
         } else {
-            $transactions = Transaction::with('billing', 'cashier')->paginate(5);
+            if (request()->has("month") && request()->month != null) {
+                $month = request()->month;
+                $transactions->whereHas('billing', function ($query) use ($month) {
+                    $query->whereMonth('paid_at', $month);
+                });
+            }
+
+            if (request()->has("year") && request()->year != null) {
+                $year = request()->year;
+                $transactions->whereHas('billing', function ($query) use ($year) {
+                    $query->whereYear('paid_at', $year);
+                });
+            }
+
+            $transactions = $transactions->get();
         }
 
-        // dd($transactions);
-        return view('transaction', compact('transactions'));
+        $years = Transaction::join('billings', 'transactions.id', '=', 'billings.id')
+            ->selectRaw('YEAR(billings.paid_at) as year')
+            ->distinct()
+            ->get();
+
+        // dd($years);
+
+        return view('transaction', compact('transactions', 'years'));
     }
 
-    public function all_search()
+
+
+
+    public function print($billing_id)
+    {
+        $transaction = Transaction::with('billing', 'cashier')->where('billing_id', $billing_id)->get()->firstOrFail();
+        return view('print.transaction', ["transaction" => $transaction]);
+    }
+
+
+    public function prints($year, $month)
     {
         $transactions = Transaction::with('billing', 'cashier');
 
-        dd($transactions);
-        $output = "";
-
-        foreach ($transactions as $transaction) {
-            $paid_at = Carbon::parse($transaction->billing->paid_at);
-            $output .= '
-
-            <tr>
-                <td> ' . sprintf('%07d', $transaction->id) . '</td>
-                <td>' . sprintf('%07d', $transaction->billing->id) . '</td>
-                <td>' . $paid_at->format('F j, Y g:i A') . '</td>
-                <td' . $transaction->billing->money . '</td>
-                <td>' . $transaction->billing->change . '</td>
-                <td>' . $transaction->cashier->first_name . '
-                    ' . $transaction->cashier->last_name . '</td>
-                <td>' . $transaction->billing->consumer->first_name . '
-                    ' . $transaction->billing->consumer->last_name . '</td>
-            </tr>
-            
-            ';
+        if ($year !== "blank") {
+            $transactions->whereHas('billing', function ($query) use ($year) {
+                $query->whereYear('paid_at', $year);
+            });
         }
 
-        return response($output);
+        if ($month !== "blank") {
+            $transactions->whereHas('billing', function ($query) use ($month) {
+                $query->whereMonth('paid_at', $month);
+            });
+        }
+
+        $transactions = $transactions->get();
+
+        return view('print.transactions', ['transactions' => $transactions]);
     }
 
     public function search($search)
     {
-        // dd()
         if ($search !== null && $search !== 'all') {
             $transactions = Transaction::with('billing', 'cashier')
                 ->where('id', intval($search))
@@ -104,21 +142,6 @@ class TransactionController extends Controller
                 </div>
             </div>
             ';
-            // $output .= '
-
-            // <tr>
-            //     <td> ' . sprintf('%07d', $transaction->id) . '</td>
-            //     <td>' . sprintf('%07d', $transaction->billing->id) . '</td>
-            //     <td>' . $paid_at->format('F j, Y g:i A') . '</td>
-            //     <td' . $transaction->billing->money . '</td>
-            //     <td>' . $transaction->billing->change . '</td>
-            //     <td>' . $transaction->cashier->first_name . '
-            //         ' . $transaction->cashier->last_name . '</td>
-            //     <td>' . $transaction->billing->consumer->first_name . '
-            //         ' . $transaction->billing->consumer->last_name . '</td>
-            // </tr>
-
-            // ';
         }
 
         return response($output);

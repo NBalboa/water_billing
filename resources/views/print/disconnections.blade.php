@@ -15,7 +15,9 @@
 
     #content {
         max-width: 400px;
-        margin: 0 auto
+        margin: 0 auto;
+        page-break-after: always;
+        margin-bottom: 20px
     }
 
     #title {
@@ -29,7 +31,7 @@
         flex-direction: row
     }
 
-    .printBtn {
+    #printBtn {
         margin-top: 12px;
         cursor: pointer;
         outline: 0;
@@ -45,9 +47,12 @@
         transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         color: #0d6efd;
         border-color: #0d6efd;
+
+
+
     }
 
-    .printBtn:hover {
+    #printBtn:hover {
         color: #fff;
         background-color: #0d6efd;
         border-color: #0d6efd;
@@ -62,6 +67,12 @@
         font-size: 16px;
         font-weight: bolder;
         margin-bottom: 8px
+    }
+
+    .printBtn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
     }
 
     #back {
@@ -100,24 +111,26 @@
         margin-bottom: 0;
     }
 
-    #printBtn {
-        position: absolute;
-        right: 14px;
-        top: 14px;
-    }
-
     .consumption .payment_info,
     .consumption .payment_title {
         margin-bottom: 0
     }
 
     @media print {
+        #content {
+            break-after: page
+        }
+
         #printBtn {
             display: none;
         }
 
         #back {
             display: none
+        }
+
+        .printBtn {
+            display: none;
         }
     }
 </style>
@@ -252,21 +265,11 @@
             </section>
         @endif
     @endforeach
-    <div id="printBtn">
-        <button onclick="window.print()" class="printBtn">Print</button>
-        @auth
-            @if (auth()->user()->status == 0)
-                <a href="/all/billings" id="back">Back</a>
-            @else
-                @if (auth()->user()->status == 1)
-                    <a href="/consumer" id="back">Back</a>
-                @else
-                    <a href="/billing/invoice" id="back">Back</a>
-                @endif
-            @endif
-        @endauth
-    </div>
 
+    <div class="printBtn">
+        <a href="/all/billings" id="back">Back</a>
+        <button id="printBtn" onclick="window.print()">Print</button>
+    </div>
 </body>
 
 </html>

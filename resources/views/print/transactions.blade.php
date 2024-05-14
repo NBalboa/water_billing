@@ -15,7 +15,8 @@
 
     #content {
         max-width: 400px;
-        margin: 0 auto
+        margin: 0 auto;
+        page-break-after: always;
     }
 
     #title {
@@ -29,7 +30,7 @@
         flex-direction: row
     }
 
-    .printBtn {
+    #printBtn {
         margin-top: 12px;
         cursor: pointer;
         outline: 0;
@@ -45,9 +46,12 @@
         transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         color: #0d6efd;
         border-color: #0d6efd;
+
+
+
     }
 
-    .printBtn:hover {
+    #printBtn:hover {
         color: #fff;
         background-color: #0d6efd;
         border-color: #0d6efd;
@@ -62,6 +66,12 @@
         font-size: 16px;
         font-weight: bolder;
         margin-bottom: 8px
+    }
+
+    .printBtn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
     }
 
     #back {
@@ -100,18 +110,16 @@
         margin-bottom: 0;
     }
 
-    #printBtn {
-        position: absolute;
-        right: 14px;
-        top: 14px;
-    }
-
     .consumption .payment_info,
     .consumption .payment_title {
         margin-bottom: 0
     }
 
     @media print {
+        #content {
+            break-after: page
+        }
+
         #printBtn {
             display: none;
         }
@@ -119,85 +127,100 @@
         #back {
             display: none
         }
+
+        .printBtn {
+            display: none;
+        }
     }
 </style>
 
 <body>
-    @foreach ($billings as $billing)
-        @if ($billing->consumer)
+    {{-- <h1>All</h1> --}}
+    @foreach ($transactions as $transaction)
+        @if ($transaction->billing->consumer)
             <section id="content">
                 <h2 id="title">Water Billing Management System</h2>
                 <h3 style="text-align: center; margin-top: 4px">Vincenzo Sagun</h3>
                 <h4 style="text-align: center; margin-top: 4px">Zamboanga Del Sur</h4>
                 <h1 style="text-align: center; margin: 24px 0">WATER BILL</h1>
                 @php
-                    $reading_date = Carbon\Carbon::parse($billing->reading_date);
-                    $due_date = Carbon\Carbon::parse($billing->due_date);
-                    $cut_off = $reading_date->addWeeks(8);
+                    $reading_date = Carbon\Carbon::parse($transaction->billing->reading_date)->setTimezone(
+                        'Asia/Manila',
+                    );
+                    $due_date = Carbon\Carbon::parse($transaction->billing->due_date)->setTimezone('Asia/Manila');
+                    $paid_at = Carbon\Carbon::parse($transaction->billing->billing)->setTimezone('Asia/Manila');
                 @endphp
 
                 @php
-                    $reading_date = Carbon\Carbon::parse($billing->reading_date);
+                    $reading_date = Carbon\Carbon::parse($transaction->billing->reading_date);
                     $current_date = Carbon\Carbon::now()->setTimezone('Asia/Manila');
-                    if ($billing->status == 'PAID') {
-                        $current_date = Carbon\Carbon::parse($billing->paid_at);
+                    if ($transaction->billing->status == 'PAID') {
+                        $current_date = Carbon\Carbon::parse($transaction->billing->paid_at);
                     }
                     $result = $reading_date->diffInWeeks($current_date);
-                    $payment = $billing->price;
+                    $payment = $transaction->billing->price;
                     if ($result >= 1) {
                         if ($result > 8) {
                             $result = 8;
                         }
-                        $payment = $billing->price + intval($result) * 50;
+                        $payment = $transaction->billing->price + intval($result) * 50;
                     }
                 @endphp
+                <p style="margin-bottom: 8px"><span style="font-weight: bold">Transaction No: </span>
+                    {{ sprintf('%07d', $transaction->id) }}</p>
                 <p style="margin-bottom: 8px"><span style="font-weight: bold">Bill No: </span>
-                    {{ sprintf('%07d', $billing->id) }}</p>
+                    {{ sprintf('%07d', $transaction->billing->id) }}</p>
                 <p style="margin-bottom: 8px"><span style="font-weight: bold">Date Created:</span>
                     {{ $reading_date->format('F j, Y g:i A') }}</p>
                 <p style="margin-bottom: 8px"><span style="font-weight: bold">Due
                         Date:</span>
                     {{ $due_date->format('F j, Y g:i A') }}</p>
+                <p style="margin-bottom: 8px"><span style="font-weight: bold">Paid:</span>
+                    {{ $paid_at->format('F j, Y g:i A') }}</p>
+                <p style="margin-bottom: 8px"><span style="font-weight: bold">
+                        Collector:</span>
+                    {{ $transaction->billing->collector->first_name }} {{ $transaction->billing->collector->last_name }}
+                </p>
                 <p style="padding-bottom: 24px; border-bottom: black solid 2px"><span
-                        style="font-weight: bold">Collector:</span>
-                    {{ $billing->collector->first_name }} {{ $billing->collector->last_name }}</p>
+                        style="font-weight: bold">Cashier:</span>
+                    {{ $transaction->cashier->first_name }} {{ $transaction->cashier->last_name }}</p>
                 <div id="print_content" style="margin-top: 24px">
                     <div>
                         <div class="payment-details">
                             <span class="payment_title">Acount No:</span>
-                            <span class="payment_info">{{ sprintf('%07d', $billing->consumer->id) }}</span>
+                            <span class="payment_info">{{ sprintf('%07d', $transaction->billing->consumer->id) }}</span>
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Account Name:</span>
-                            <span class="payment_info">{{ $billing->consumer->first_name }}
-                                {{ $billing->consumer->last_name }}</span>
+                            <span class="payment_info">{{ $transaction->billing->consumer->first_name }}
+                                {{ $transaction->billing->consumer->last_name }}</span>
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Address: </span>
-                            <span class="payment_info">{{ $billing->consumer->street }},
-                                {{ $billing->consumer->barangay }}
+                            <span class="payment_info">{{ $transaction->billing->consumer->street }},
+                                {{ $transaction->billing->consumer->barangay }}
                             </span>
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Meter Code: </span>
-                            <span class="payment_info">{{ $billing->consumer->meter_code }}</span>
+                            <span class="payment_info">{{ $transaction->billing->consumer->meter_code }}</span>
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Previous</span>
-                            <span class="payment_info">{{ $billing->previos }}</span>
+                            <span class="payment_info">{{ $transaction->billing->previos }}</span>
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Current</span>
-                            <span class="payment_info">{{ $billing->current }}</span>
+                            <span class="payment_info">{{ $transaction->billing->current }}</span>
                         </div>
                         <div class="payment-details consumption">
                             <span class="payment_title">Total Consumption</span>
-                            <span class="payment_info">{{ $billing->total_consumption }}</span>
+                            <span class="payment_info">{{ $transaction->billing->total_consumption }}</span>
                         </div>
 
                         <div class="payment-details">
                             <span class="payment_title">Water Bill</span>
-                            <span class="payment_info">{{ $billing->price }}</span>
+                            <span class="payment_info">{{ $transaction->billing->price }}</span>
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Source Charge</span>
@@ -205,7 +228,7 @@
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Total Amount Due</span>
-                            <span class="payment_info">{{ $billing->total }}</span>
+                            <span class="payment_info">{{ $transaction->billing->total }}</span>
                         </div>
                         <div class="payment-details">
                             <span class="payment_title">Penalty After Due</span>
@@ -214,59 +237,39 @@
                         <div class="payment-details"
                             style="border-bottom: 2px solid black; padding-bottom: 8px; margin-bottom: 12px">
                             <span class="payment_title">Total Amount After Due</span>
-                            {{-- <span class="payment_info">{{ $billing->after_due }}</span> --}}
+                            {{-- <span class="payment_info">{{ $transaction->billing->after_due }}</span> --}}
                             @if (intval($result) === 0)
-                                <span class="payment_info"> {{ $billing->after_due }}
+                                <span class="payment_info"> {{ $transaction->billing->after_due }}
                                 </span>
                             @else
                                 <span class="payment_info">{{ number_format($payment, 2) }}
                                 </span>
                             @endif
                         </div>
-                        @if ($billing->status === 'PENDING')
-                            <div>Reminders:</p>
-                                <ol style="margin-left: 15px; margin-top: 10px;">
-                                    <li>Disconnection Date {{ $cut_off->format('F j, Y g:i A') }}</i></li>
-                                    <li>This bill also serve as Notice of Disconnection</li>
-                                    <li>Not valid as official receipt</li>
-                                    <li>This is final if no complaint is received afte</li>
-                                </ol>
-                                <p>Please present this statement when paying your water bill</p>
-                                {{-- <p>Note: <i>Every consecutive weeks delayed payment by after due date the penalty will add
-                                    by 50. cut off date: {{ $cut_off->format('F j, Y g:i A') }}</i></p> --}}
-                            </div>
-                        @endif
 
-                        @if ($billing->status === 'PAID')
-                            <div class="payment-details">
-                                <span class="payment_title">Money</span>
-                                <span class="payment_info">{{ $billing->money }}</span>
-                            </div>
-                            <div class="payment-details">
-                                <span class="payment_title">Change</span>
-                                <span class="payment_info">{{ $billing->change }}</span>
-                            </div>
-                        @endif
+                        <div class="payment-details">
+                            <span class="payment_title">Money</span>
+                            <span class="payment_info">{{ $transaction->billing->money }}</span>
+                        </div>
+                        <div class="payment-details">
+                            <span class="payment_title">Change</span>
+                            <span class="payment_info">{{ $transaction->billing->change }}</span>
+                        </div>
                     </div>
                 </div>
             </section>
         @endif
     @endforeach
-    <div id="printBtn">
-        <button onclick="window.print()" class="printBtn">Print</button>
-        @auth
-            @if (auth()->user()->status == 0)
-                <a href="/all/billings" id="back">Back</a>
-            @else
-                @if (auth()->user()->status == 1)
-                    <a href="/consumer" id="back">Back</a>
-                @else
-                    <a href="/billing/invoice" id="back">Back</a>
-                @endif
-            @endif
-        @endauth
+    <div class="printBtn">
+        <a href="/all/transactions" id="back">Back</a>
+        <button id="printBtn" onclick="window.print()">Print</button>
     </div>
 
+    <script>
+        window.addEventListener('load', function() {
+            window.print();
+        });
+    </script>
 </body>
 
 </html>

@@ -8,8 +8,8 @@
                 <div>
                     <form method="GET" action="/all/billings">
                         <div class="d-flex  align-items-center">
+                            <label for="month">Month</label>
                             <div class="form-group mr-3">
-                                <label for="month">Month</label>
                                 <select name="month" value="{{ old('month') }}">
                                     <option value="">Select Year</option>
                                     @for ($i = 1; $i <= 12; $i++)
@@ -51,7 +51,9 @@
                 </div>
             </div>
             <section class="content">
-
+                @if (count($disconnections) > 0)
+                    <a href="/billing/disconnections/print" class="btn btn-danger mb-2">Print Disconnection</a>
+                @endif
                 <div class="row" id="billing_result">
                     @if ($billings->isEmpty())
                         <div>
@@ -114,7 +116,11 @@
                                         </p>
                                     </div>
                                     <div class="card-footer">
-                                        <a class="btn btn-dark" href="/billing/print/{{ $billing->id }}">Print</a>
+                                        @if ($billing->status == 'PAID')
+                                            <a class="btn btn-dark" href="/transaction/print/{{ $billing->id }}">Print</a>
+                                        @else
+                                            <a class="btn btn-dark" href="/billing/print/{{ $billing->id }}">Print</a>
+                                        @endif
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
@@ -129,16 +135,7 @@
                         {{ $billings->links('pagination::bootstrap-4') }}
                     </div>
                 @endif
-                {{-- @php
-                    $month = request()->query('month');
-                    $year = request()->query('year');
-                    $status = request()->query('status');
-                    $search = request()->query('search');
-                @endphp
-                <div class="text-right">
-                    <a href="/billings/print/receipts/{{ $month == null ? 'blank' : $month }}/{{ $year == null ? 'blank' : $year }}/{{ $status == null ? 'blank' : $status }}/{{ $search == null ? 'blank' : $search }}"
-                        class="btn btn-dark">Generate Receipts</a>
-                </div> --}}
+
             </section>
         </section>
     </div>

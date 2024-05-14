@@ -15,6 +15,29 @@
         <section class="content">
             <div class="mb-3">
                 <form method="GET" action="#">
+                    <div class="d-flex  align-items-center">
+
+                        <div class="form-group mr-3">
+                            <label for="month">Month</label>
+                            <select name="month" value="{{ old('month') }}">
+                                <option value="">Select Year</option>
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}">
+                                        {{ $month = date('F', mktime(0, 0, 0, $i, 1, date('Y'))) }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="form-group mr-2">
+                            <label for="year">Year</label>
+                            <select name="year">
+                                <option value="">Select Year</option>
+                                @foreach ($years as $year)
+                                    <option value="{{ $year->year }}">{{ $year->year }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <div class="input-group input-group-sm" style="width: 100%;">
                         <input type="text" name="table_search" class="form-control float-right" id="transaction_search"
                             placeholder="Search Bill No./Transaction No.">
@@ -26,6 +49,11 @@
                     </div>
                 </form>
             </div>
+            @if (!$transactions->isEmpty())
+                <a href="/transactions/print/{{ request()->year == null ? 'blank' : request()->year }}/{{ request()->month == null ? 'blank' : request()->month }}"
+                    class="btn btn-dark mb-2">Print</a>
+            @endif
+
             <div class="row" id="transaction_result">
                 @if ($transactions->isEmpty())
                     <p>No Reports Found</p>
@@ -53,7 +81,8 @@
                                     <p><span class="font-weight-bold">Paid: </span>{{ $paid_at->format('F j, Y g:i A') }}
                                     </p>
                                     <p><span class="font-weight-bold">Amount: </span>{{ $transaction->billing->money }}</p>
-                                    <p><span class="font-weight-bold">Change: </span>{{ $transaction->billing->change }}</p>
+                                    <p><span class="font-weight-bold">Change: </span>{{ $transaction->billing->change }}
+                                    </p>
 
                                 </div>
                                 <!-- /.card-body -->
