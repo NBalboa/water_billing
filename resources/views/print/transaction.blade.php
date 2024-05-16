@@ -246,7 +246,7 @@
         <button onclick="window.print()" class="printBtn">Print</button>
         @auth
             @if (auth()->user()->status == 0)
-                <a href="/all/billings" id="back">Back</a>
+                <a href="/all/transactions" id="back">Back</a>
             @else
                 @if (auth()->user()->status == 1)
                     <a href="/consumer" id="back">Back</a>

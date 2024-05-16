@@ -15,9 +15,6 @@ class BillingController extends Controller
     public function showEdit($id)
     {
         $billing = Billing::with('consumer')->findOrFail($id);
-
-        // dd($billing);
-
         return view('update.billing', ['billing' => $billing]);
     }
 
@@ -154,7 +151,6 @@ class BillingController extends Controller
     {
         $billings = Billing::with('consumer', 'collector');
 
-
         if (request()->has('search')) {
             if (request()->has('search') && request()->search != null) {
                 $search = request()->search;
@@ -210,10 +206,7 @@ class BillingController extends Controller
             }
         }
 
-        // dd($disconnections);
 
-
-        // dd($disconnections);
         $years = Billing::getYears();
 
         return view('billing', ['billings' => $billings, 'years' => $years, 'disconnections' => $disconnections]);
@@ -259,6 +252,7 @@ class BillingController extends Controller
         $output = "";
 
         foreach ($billings as $billing) {
+
             $reading_date = Carbon::parse($billing->reading_date);
             $current_date = Carbon::now()->setTimezone('Asia/Manila');
             if ($billing->status == 'PAID') {
@@ -273,37 +267,30 @@ class BillingController extends Controller
                 $payment = $billing->price + intval($result) * 50;
             }
 
+            $latest_date_paid = Billing::where(
+                'consumer_id',
+                $billing->consumer->id,
+            )
+                ->whereNotNull('paid_at')
+                ->where('status', 'PAID')
+                ->latest()
+                ->first();
             $output .= '
-             <div class="col-md-3">
-                <div
-                    class="card ' . (intval($result) >= 8 && $billing->status === 'PENDING' ? 'card-danger' : 'card-primary') . '">
-                    <div class="card-header">
-                        <h3 class="card-title">Billing</h3>
-                    </div>
-                    <div class="card-body">
-                        <p><span class="font-weight-bold">ID:</span> ' . sprintf('%07d', $billing->id) . '
-                        </p>
-                        <p><span class="font-weight-bold">Reading Date:</span>
-                            ' . $reading_date->format('F j, Y g:i A') . '</p>
-                        <p><span class="font-weight-bold">Meter Code:</span>
-                            ' . $billing->consumer->meter_code . '</p>
-                        <p><span class="font-weight-bold">Consumer Name:</span>
-                            ' . $billing->consumer->first_name . '
-                            ' . $billing->consumer->last_name . '</p>
-                        <p><span class="font-weight-bold">Status:</span> ' . $billing->status . '</p>
-                        <p><span class="font-weight-bold">Total Consumption:</span>
-                            ' . $billing->total_consumption . '</p>
-                        <p><span class="font-weight-bold">Total:</span> ' . $billing->total . '</p>
-                        <p><span class="font-weight-bold">Total Amount After Due:</span>
-                            ' . (intval($result) === 0 ? $billing->after_due : number_format($payment, 2)) . '
-                        </p>
-                    </div>
-                    <div class="card-footer">
-                        <a class="btn btn-dark" href="/billing/print/' . $billing->id . '">Print</a>
-                    </div>
-                   
-                </div>
-            </div>
+                <tr class=
+                "text clickable-tr ' . (intval($result) >= 8 && $billing->status === 'PENDING' ? 'text-danger' : 'text-dark') . '"
+                    data-href="' . ($billing->status == 'PENDING' ? "/billing/print/$billing->id" : "/transaction/print/$billing->id") . '"
+                    style="cursor: pointer;">
+                    <td>' . $billing->consumer->meter_code . '</td>
+                    <td>' . sprintf('%07d', $billing->id) . '</td>
+                    <td>' . $billing->consumer->first_name . '
+                        ' . $billing->consumer->last_name . '</td>
+                    <td>' . $billing->consumer->street . ',
+                        ' . $billing->consumer->barangay . '</td>
+                    <td>' . (!$latest_date_paid ? '' : Carbon::parse($latest_date_paid->paid_at)->format('M')) . '
+                    </td>
+                    <td>' . (intval($result) === 0 ? $billing->total : number_format($payment, 2)) . '
+                    </td>
+                </tr>
             ';
         }
 
@@ -379,34 +366,13 @@ class BillingController extends Controller
                     </div>
                 </div>
                 ';
-            // <tr>
-            //     <td>' . sprintf('%07d', $billing->id) . '</td>
-            //     <td>' . $billing->consumer->meter_code . '</td>
-            //     <td>' . $billing->consumer->first_name . '
-            //         ' . $billing->consumer->last_name . '</td>
-            //     <td>' . $billing->status . '</td>
-            //     <td>' . $billing->total_consumption . '</td>
-            //     <td>' . $billing->total . '</td>
-            //     <td>' . $billing->after_due . '</td>
-            //     <td>
-            //         <a href="/billing/' . $billing->id . '" class="btn btn-info text-right">
-            //             Pay
-            //         </a>
-            //     </td>
-            // </tr>
         }
-
         return response($output);
     }
 
     public function print($id)
     {
         $billing = Billing::with('consumer', 'collector')->findOrFail($id);
-        // dd($billing);
-        // dd(User::findOrFail(2));
-        // $collector = User::findOrFail($billing->collector_id);
-
-        // dd($collector);
         return view('receipt', ['billing' => $billing]);
     }
 

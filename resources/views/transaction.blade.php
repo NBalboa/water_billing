@@ -20,7 +20,7 @@
                         <div class="form-group mr-3">
                             <label for="month">Month</label>
                             <select name="month" value="{{ old('month') }}">
-                                <option value="">Select Year</option>
+                                <option value="">Select Month</option>
                                 @for ($i = 1; $i <= 12; $i++)
                                     <option value="{{ $i }}">
                                         {{ $month = date('F', mktime(0, 0, 0, $i, 1, date('Y'))) }}
@@ -54,45 +54,55 @@
                     class="btn btn-dark mb-2">Print</a>
             @endif
 
-            <div class="row" id="transaction_result">
-                @if ($transactions->isEmpty())
-                    <p>No Reports Found</p>
-                @else
-                    @foreach ($transactions as $transaction)
-                        @php
-                            $paid_at = Carbon\Carbon::parse($transaction->billing->paid_at);
-                        @endphp
-                        <div class="col-md-3">
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <h3 class="card-title">Transaction</h3>
-                                </div>
-                                <div class="card-body">
-                                    <p><span class="font-weight-bold">Transaction
-                                            No: </span>{{ sprintf('%07d', $transaction->id) }}</p>
-                                    <p><span class="font-weight-bold">Billing No:
-                                        </span>{{ sprintf('%07d', $transaction->billing->id) }}</p>
-                                    <p><span class="font-weight-bold">Cashier:
-                                        </span>{{ $transaction->cashier->first_name }}
-                                        {{ $transaction->cashier->last_name }}</p>
-                                    <p><span class="font-weight-bold">Consumer:
-                                        </span>{{ $transaction->billing->consumer->first_name }}
-                                        {{ $transaction->billing->consumer->last_name }}</p>
-                                    <p><span class="font-weight-bold">Paid: </span>{{ $paid_at->format('F j, Y g:i A') }}
-                                    </p>
-                                    <p><span class="font-weight-bold">Amount: </span>{{ $transaction->billing->money }}</p>
-                                    <p><span class="font-weight-bold">Change: </span>{{ $transaction->billing->change }}
-                                    </p>
 
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
-                    @endforeach
-                @endif
 
+            <div class="card">
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                    <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>Meter No.</th>
+                                <th>Billing No.</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Date Paid</th>
+                                <th>Month Paid</th>
+                                <th>Cashier Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction_result">
+                            @if ($transactions->isEmpty())
+                                <div>
+                                    <p>No Reports Found</p>
+                                </div>
+                            @else
+                                @foreach ($transactions as $transaction)
+                                    @php
+                                        $paid_at = Carbon\Carbon::parse($transaction->billing->paid_at);
+                                    @endphp
+                                    <tr class="text clickable-tr "
+                                        data-href="/transaction/print/{{ $transaction->billing->id }}"
+                                        style="cursor: pointer;">
+                                        <td>{{ $transaction->billing->consumer->meter_code }}</td>
+                                        <td>{{ sprintf('%07d', $transaction->billing->id) }}</td>
+                                        <td>{{ $transaction->billing->consumer->first_name }}
+                                            {{ $transaction->billing->consumer->last_name }}</td>
+                                        <td>{{ $transaction->billing->consumer->street }},
+                                            {{ $transaction->billing->consumer->barangay }}</td>
+                                        <td>{{ $paid_at->format('F j, Y') }}
+                                        </td>
+                                        <td>{{ $paid_at->format('F') }}
+                                        </td>
+                                        <td>{{ $transaction->cashier->first_name }}
+                                            {{ $transaction->cashier->last_name }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
 
         </section>
         @if (method_exists($transactions, 'links'))

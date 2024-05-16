@@ -114,33 +114,24 @@ class TransactionController extends Controller
 
         foreach ($transactions as $transaction) {
             $paid_at = Carbon::parse($transaction->billing->paid_at);
-
             $output .= '
-
-            <div class="col-md-3">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Transaction</h3>
-                    </div>
-                    <div class="card-body">
-                        <p><span class="font-weight-bold">Transaction
-                                No: </span>' . sprintf('%07d', $transaction->id) . '</p>
-                        <p><span class="font-weight-bold">Billing No:
-                            </span>' . sprintf('%07d', $transaction->billing->id) . '</p>
-                        <p><span class="font-weight-bold">Cashier:
-                            </span>' . $transaction->cashier->first_name . '
-                            ' . $transaction->cashier->last_name . '</p>
-                        <p><span class="font-weight-bold">Consumer:
-                            </span>' . $transaction->billing->consumer->first_name . '
-                            ' . $transaction->billing->consumer->last_name . '</p>
-                        <p><span class="font-weight-bold">Paid: </span>' . $paid_at->format('F j, Y g:i A') . '
-                        </p>
-                        <p><span class="font-weight-bold">Amount: </span>' . $transaction->billing->money . '</p>
-                        <p><span class="font-weight-bold">Change: </span>' . $transaction->billing->change . '</p>
-
-                    </div>
-                </div>
-            </div>
+                    <tr class="text clickable-tr "
+                        data-href="/transaction/print/' . $transaction->billing->id . '"
+                        style="cursor: pointer;">
+                        <td>' . $transaction->billing->consumer->meter_code . '</td>
+                        <td>' . sprintf('%07d', $transaction->billing->id) . '</td>
+                        <td>' . $transaction->billing->consumer->first_name . '
+                            ' . $transaction->billing->consumer->last_name . '</td>
+                        <td>' . $transaction->billing->consumer->street . ',
+                            ' . $transaction->billing->consumer->barangay . '</td>
+                        <td>' . $paid_at->format('F j, Y') . '
+                        </td>
+                        <td>' . $paid_at->format('F') . '
+                        </td>
+                        <td>' . $transaction->cashier->first_name . '
+                            ' . $transaction->cashier->last_name . '</td>
+                    </tr>
+            
             ';
         }
 
