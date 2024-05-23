@@ -247,6 +247,11 @@
             @endif
         @endauth
     </div>
+    <script>
+        window.addEventListener('load', function() {
+            window.print();
+        });
+    </script>
 
 </body>
 
