@@ -23,6 +23,17 @@
 
     }
 
+    .zui-table caption {
+        background-color: #DDEFEF;
+        border: solid 1px #DDEEEE;
+        color: #336B6B;
+        padding: 10px;
+        text-align: left;
+        text-shadow: 1px 1px 1px #fff;
+        text-align: center;
+        font-weight: 900;
+    }
+
     .zui-table thead th {
         background-color: #DDEFEF;
         border: solid 1px #DDEEEE;
@@ -138,6 +149,7 @@
 <body>
 
     <table class="zui-table">
+        <caption>Disconnections</caption>
         <thead>
             <tr>
                 <th>Meter No.</th>
