@@ -23,16 +23,7 @@
 
     }
 
-    .zui-table caption {
-        background-color: #DDEFEF;
-        border: solid 1px #DDEEEE;
-        color: #336B6B;
-        padding: 10px;
-        text-align: left;
-        text-shadow: 1px 1px 1px #fff;
-        text-align: center;
-        font-weight: 900;
-    }
+
 
     .zui-table thead th {
         background-color: #DDEFEF;
@@ -51,9 +42,6 @@
         margin: 0 auto;
     }
 
-    body {
-        margin: 67px 24px 0 24px
-    }
 
 
 
@@ -141,52 +129,94 @@
             display: none;
         }
     }
+
+    .headings {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
+    .headings img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .zui-table caption {
+        border: solid 1px #DDEEEE;
+        color: black;
+        padding: 10px;
+        text-align: left;
+        text-shadow: 1px 1px 1px #fff;
+        text-align: center;
+        font-weight: 900;
+        font-size: 16px;
+    }
+
+    .wrapper {
+        margin: 0 24px
+    }
 </style>
 
 <body>
-    {{-- <h1>All</h1> --}}
-    <table class="zui-table">
-        <caption>Transactions</caption>
-        <thead>
-            <tr>
-                <th>Meter No.</th>
-                <th>Billing No.</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Date Paid</th>
-                <th>Month Paid</th>
-                <th>Cashier Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if ($transactions->isEmpty())
-                <div>
-                    <p>No Reports Found</p>
-                </div>
-            @else
-                @foreach ($transactions as $transaction)
-                    @php
-                        $paid_at = Carbon\Carbon::parse($transaction->billing->paid_at);
-                    @endphp
-                    <tr class="text clickable-tr " data-href="/transaction/print/{{ $transaction->billing->id }}"
-                        style="cursor: pointer;">
-                        <td>{{ $transaction->billing->consumer->meter_code }}</td>
-                        <td>{{ sprintf('%07d', $transaction->billing->id) }}</td>
-                        <td>{{ $transaction->billing->consumer->first_name }}
-                            {{ $transaction->billing->consumer->last_name }}</td>
-                        <td>{{ $transaction->billing->consumer->street }},
-                            {{ $transaction->billing->consumer->barangay }}</td>
-                        <td>{{ $paid_at->format('F j, Y') }}
-                        </td>
-                        <td>{{ $paid_at->format('F') }}
-                        </td>
-                        <td>{{ $transaction->cashier->first_name }}
-                            {{ $transaction->cashier->last_name }}</td>
-                    </tr>
-                @endforeach
-            @endif
-        </tbody>
-    </table>
+
+    <div class="wrapper">
+        <div class="headings">
+            <img src="/assets/img/image1.png" />
+            <div>
+                <h1>Water Billing Management System</h1>
+                <h2>Vincenzo Sagun</h2>
+                <h3>Zamboanga Del Sur</h3>
+            </div>
+        </div>
+        {{-- <h1>All</h1> --}}
+        <table class="zui-table">
+            <caption>Transactions Reports</caption>
+            <thead>
+                <tr>
+                    <th>Meter No.</th>
+                    <th>Billing No.</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Date Paid</th>
+                    <th>Month Paid</th>
+                    <th>Cashier Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if ($transactions->isEmpty())
+                    <div>
+                        <p>No Reports Found</p>
+                    </div>
+                @else
+                    @foreach ($transactions as $transaction)
+                        @php
+                            $paid_at = Carbon\Carbon::parse($transaction->billing->paid_at);
+                        @endphp
+                        <tr class="text clickable-tr " data-href="/transaction/print/{{ $transaction->billing->id }}"
+                            style="cursor: pointer;">
+                            <td>{{ $transaction->billing->consumer->meter_code }}</td>
+                            <td>{{ sprintf('%07d', $transaction->billing->id) }}</td>
+                            <td>{{ $transaction->billing->consumer->first_name }}
+                                {{ $transaction->billing->consumer->last_name }}</td>
+                            <td>{{ $transaction->billing->consumer->street }},
+                                {{ $transaction->billing->consumer->barangay }}</td>
+                            <td>{{ $paid_at->format('F j, Y') }}
+                            </td>
+                            <td>{{ $paid_at->format('F') }}
+                            </td>
+                            <td>{{ $transaction->cashier->first_name }}
+                                {{ $transaction->cashier->last_name }}</td>
+                        </tr>
+                    @endforeach
+                @endif
+            </tbody>
+        </table>
+    </div>
+
     <div class="printBtn">
         <a href="/all/transactions" id="back">Back</a>
         <button id="printBtn" onclick="window.print()">Print</button>

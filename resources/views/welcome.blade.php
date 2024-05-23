@@ -59,7 +59,8 @@
         <div class="container">
             <div class="social-icons"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i
                         class="icon ion-social-instagram-outline"></i></a><a href="#"><i
-                        class="icon ion-social-twitter"></i></a></div>
+                        class="icon ion-social-twitter"></i></a>
+            </div>
         </div>
     </footer>
     </div>

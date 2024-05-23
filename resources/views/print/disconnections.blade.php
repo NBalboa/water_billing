@@ -23,16 +23,6 @@
 
     }
 
-    .zui-table caption {
-        background-color: #DDEFEF;
-        border: solid 1px #DDEEEE;
-        color: #336B6B;
-        padding: 10px;
-        text-align: left;
-        text-shadow: 1px 1px 1px #fff;
-        text-align: center;
-        font-weight: 900;
-    }
 
     .zui-table thead th {
         background-color: #DDEFEF;
@@ -49,10 +39,6 @@
         padding: 10px;
         text-shadow: 1px 1px 1px #fff;
         margin: 0 auto;
-    }
-
-    body {
-        margin: 67px 24px 0 24px
     }
 
 
@@ -144,64 +130,104 @@
             display: none
         }
     }
+
+    .headings {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
+    .headings img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .zui-table caption {
+        border: solid 1px #DDEEEE;
+        color: black;
+        padding: 10px;
+        text-align: left;
+        text-shadow: 1px 1px 1px #fff;
+        text-align: center;
+        font-weight: 900;
+        font-size: 16px;
+    }
+
+    .wrapper {
+        margin: 0 24px
+    }
 </style>
 
 <body>
 
-    <table class="zui-table">
-        <caption>Disconnections</caption>
-        <thead>
-            <tr>
-                <th>Meter No.</th>
-                <th>Billing No.</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Last Month Paid</th>
-                <th>Total Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @foreach ($billings as $billing)
-                @php
-                    $reading_date = Carbon\Carbon::parse($billing->reading_date);
-                    $current_date = Carbon\Carbon::now()->setTimezone('Asia/Manila');
-                    if ($billing->status == 'PAID') {
-                        $current_date = Carbon\Carbon::parse($billing->paid_at);
-                    }
-                    $result = $reading_date->diffInWeeks($current_date);
-                    $payment = $billing->price;
-                    if ($result >= 1) {
-                        if ($result > 8) {
-                            $result = 8;
-                        }
-                        $payment = $billing->price + intval($result) * 50;
-                    }
-
-                    $latest_date_paid = App\Models\Billing::where('consumer_id', $billing->consumer->id)
-                        ->whereNotNull('paid_at')
-                        ->where('status', 'PAID')
-                        ->latest()
-                        ->first();
-                @endphp
-                <tr class=
-                                        "text clickable-tr {{ intval($result) >= 8 && $billing->status === 'PENDING' ? 'text-danger' : 'text-dark' }}"
-                    data-href="{{ $billing->status == 'PENDING' ? "/billing/print/$billing->id" : "/transaction/print/$billing->id" }}"
-                    style="cursor: pointer;">
-                    <td>{{ $billing->consumer->meter_code }}</td>
-                    <td>{{ sprintf('%07d', $billing->id) }}</td>
-                    <td>{{ $billing->consumer->first_name }}
-                        {{ $billing->consumer->last_name }}</td>
-                    <td>{{ $billing->consumer->street }},
-                        {{ $billing->consumer->barangay }}</td>
-                    <td>{{ !$latest_date_paid ? '' : Carbon\Carbon::parse($latest_date_paid->paid_at)->format('F') }}
-                    </td>
-                    <td>{{ intval($result) === 0 ? $billing->total : number_format($payment, 2) }}
-                    </td>
+    <div class="wrapper">
+        <div class="headings">
+            <img src="/assets/img/image1.png" />
+            <div>
+                <h1>Water Billing Management System</h1>
+                <h2>Vincenzo Sagun</h2>
+                <h3>Zamboanga Del Sur</h3>
+            </div>
+        </div>
+        <table class="zui-table">
+            <caption>Disconnections Reports</caption>
+            <thead>
+                <tr>
+                    <th>Meter No.</th>
+                    <th>Billing No.</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Last Month Paid</th>
+                    <th>Total Amount</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+
+                @foreach ($billings as $billing)
+                    @php
+                        $reading_date = Carbon\Carbon::parse($billing->reading_date);
+                        $current_date = Carbon\Carbon::now()->setTimezone('Asia/Manila');
+                        if ($billing->status == 'PAID') {
+                            $current_date = Carbon\Carbon::parse($billing->paid_at);
+                        }
+                        $result = $reading_date->diffInWeeks($current_date);
+                        $payment = $billing->price;
+                        if ($result >= 1) {
+                            if ($result > 8) {
+                                $result = 8;
+                            }
+                            $payment = $billing->price + intval($result) * 50;
+                        }
+
+                        $latest_date_paid = App\Models\Billing::where('consumer_id', $billing->consumer->id)
+                            ->whereNotNull('paid_at')
+                            ->where('status', 'PAID')
+                            ->latest()
+                            ->first();
+                    @endphp
+                    <tr class=
+                                        "text clickable-tr {{ intval($result) >= 8 && $billing->status === 'PENDING' ? 'text-danger' : 'text-dark' }}"
+                        data-href="{{ $billing->status == 'PENDING' ? "/billing/print/$billing->id" : "/transaction/print/$billing->id" }}"
+                        style="cursor: pointer;">
+                        <td>{{ $billing->consumer->meter_code }}</td>
+                        <td>{{ sprintf('%07d', $billing->id) }}</td>
+                        <td>{{ $billing->consumer->first_name }}
+                            {{ $billing->consumer->last_name }}</td>
+                        <td>{{ $billing->consumer->street }},
+                            {{ $billing->consumer->barangay }}</td>
+                        <td>{{ !$latest_date_paid ? '' : Carbon\Carbon::parse($latest_date_paid->paid_at)->format('F') }}
+                        </td>
+                        <td>{{ intval($result) === 0 ? $billing->total : number_format($payment, 2) }}
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     <div id="printBtn">
         <button onclick="window.print()" class="printBtn">Print</button>
         @auth
