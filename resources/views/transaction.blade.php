@@ -53,11 +53,7 @@
                 <a href="/transactions/print/{{ request()->year == null ? 'blank' : request()->year }}/{{ request()->month == null ? 'blank' : request()->month }}"
                     class="btn btn-dark mb-2">Print</a>
             @endif
-
-
-
             <div class="card">
-                <!-- /.card-header -->
                 <div class="card-body table-responsive p-0" style="height: 300px;">
                     <table class="table table-head-fixed text-nowrap">
                         <thead>

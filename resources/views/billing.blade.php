@@ -54,6 +54,17 @@
                 @if (count($disconnections) > 0)
                     <a href="/billing/disconnections/print" class="btn btn-danger mb-2">Print Disconnection</a>
                 @endif
+
+                @php
+                    $month = request()->query('month');
+                    $year = request()->query('year');
+                    $status = request()->query('status');
+                    $search = request()->query('search');
+                @endphp
+                @if (!$billings->isEmpty())
+                    <a href="/billings/print/receipts/{{ $month == null ? 'blank' : $month }}/{{ $year == null ? 'blank' : $year }}/{{ $status == null ? 'blank' : $status }}/{{ $search == null ? 'blank' : $search }}"
+                        class="btn btn-dark mb-2">Print</a>
+                @endif
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 300px;">

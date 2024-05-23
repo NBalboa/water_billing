@@ -13,22 +13,38 @@
         box-sizing: border-box;
     }
 
-    #content {
-        max-width: 400px;
+
+    .zui-table {
+        border: solid 1px #DDEEEE;
+        border-collapse: collapse;
+        border-spacing: 0;
+        font: normal 13px Arial, sans-serif;
+        width: 100%;
+
+    }
+
+    .zui-table thead th {
+        background-color: #DDEFEF;
+        border: solid 1px #DDEEEE;
+        color: #336B6B;
+        padding: 10px;
+        text-align: left;
+        text-shadow: 1px 1px 1px #fff;
+    }
+
+    .zui-table tbody td {
+        border: solid 1px #DDEEEE;
+        color: #333;
+        padding: 10px;
+        text-shadow: 1px 1px 1px #fff;
         margin: 0 auto;
-        page-break-after: always;
     }
 
-    #title {
-        text-align: center;
+    body {
+        margin: 67px 24px 0 24px
     }
 
 
-    .payment-details {
-        display: flex;
-        justify-content: space-between;
-        flex-direction: row
-    }
 
     #printBtn {
         margin-top: 12px;
@@ -57,16 +73,7 @@
         border-color: #0d6efd;
     }
 
-    .payment_title {
-        font-size: 16px;
-        margin-bottom: 8px
-    }
 
-    .payment_info {
-        font-size: 16px;
-        font-weight: bolder;
-        margin-bottom: 8px
-    }
 
     .printBtn {
         position: absolute;
@@ -103,12 +110,6 @@
         transition-duration: 0.1s;
     }
 
-    .consumption {
-        border-bottom: 2px solid black;
-        border-top: 2px solid black;
-        padding: 18px 0;
-        margin-bottom: 0;
-    }
 
     .consumption .payment_info,
     .consumption .payment_title {
@@ -116,9 +117,6 @@
     }
 
     @media print {
-        #content {
-            break-after: page
-        }
 
         #printBtn {
             display: none;
@@ -136,130 +134,47 @@
 
 <body>
     {{-- <h1>All</h1> --}}
-    @foreach ($transactions as $transaction)
-        @if ($transaction->billing->consumer)
-            <section id="content">
-                <h2 id="title">Water Billing Management System</h2>
-                <h3 style="text-align: center; margin-top: 4px">Vincenzo Sagun</h3>
-                <h4 style="text-align: center; margin-top: 4px">Zamboanga Del Sur</h4>
-                <h1 style="text-align: center; margin: 24px 0">WATER BILL</h1>
-                @php
-                    $reading_date = Carbon\Carbon::parse($transaction->billing->reading_date)->setTimezone(
-                        'Asia/Manila',
-                    );
-                    $due_date = Carbon\Carbon::parse($transaction->billing->due_date)->setTimezone('Asia/Manila');
-                    $paid_at = Carbon\Carbon::parse($transaction->billing->billing)->setTimezone('Asia/Manila');
-                @endphp
-
-                @php
-                    $reading_date = Carbon\Carbon::parse($transaction->billing->reading_date);
-                    $current_date = Carbon\Carbon::now()->setTimezone('Asia/Manila');
-                    if ($transaction->billing->status == 'PAID') {
-                        $current_date = Carbon\Carbon::parse($transaction->billing->paid_at);
-                    }
-                    $result = $reading_date->diffInWeeks($current_date);
-                    $payment = $transaction->billing->price;
-                    if ($result >= 1) {
-                        if ($result > 8) {
-                            $result = 8;
-                        }
-                        $payment = $transaction->billing->price + intval($result) * 50;
-                    }
-                @endphp
-                <p style="margin-bottom: 8px"><span style="font-weight: bold">Transaction No: </span>
-                    {{ sprintf('%07d', $transaction->id) }}</p>
-                <p style="margin-bottom: 8px"><span style="font-weight: bold">Bill No: </span>
-                    {{ sprintf('%07d', $transaction->billing->id) }}</p>
-                <p style="margin-bottom: 8px"><span style="font-weight: bold">Date Created:</span>
-                    {{ $reading_date->format('F j, Y g:i A') }}</p>
-                <p style="margin-bottom: 8px"><span style="font-weight: bold">Due
-                        Date:</span>
-                    {{ $due_date->format('F j, Y g:i A') }}</p>
-                <p style="margin-bottom: 8px"><span style="font-weight: bold">Paid:</span>
-                    {{ $paid_at->format('F j, Y g:i A') }}</p>
-                <p style="margin-bottom: 8px"><span style="font-weight: bold">
-                        Collector:</span>
-                    {{ $transaction->billing->collector->first_name }} {{ $transaction->billing->collector->last_name }}
-                </p>
-                <p style="padding-bottom: 24px; border-bottom: black solid 2px"><span
-                        style="font-weight: bold">Cashier:</span>
-                    {{ $transaction->cashier->first_name }} {{ $transaction->cashier->last_name }}</p>
-                <div id="print_content" style="margin-top: 24px">
-                    <div>
-                        <div class="payment-details">
-                            <span class="payment_title">Acount No:</span>
-                            <span class="payment_info">{{ sprintf('%07d', $transaction->billing->consumer->id) }}</span>
-                        </div>
-                        <div class="payment-details">
-                            <span class="payment_title">Account Name:</span>
-                            <span class="payment_info">{{ $transaction->billing->consumer->first_name }}
-                                {{ $transaction->billing->consumer->last_name }}</span>
-                        </div>
-                        <div class="payment-details">
-                            <span class="payment_title">Address: </span>
-                            <span class="payment_info">{{ $transaction->billing->consumer->street }},
-                                {{ $transaction->billing->consumer->barangay }}
-                            </span>
-                        </div>
-                        <div class="payment-details">
-                            <span class="payment_title">Meter Code: </span>
-                            <span class="payment_info">{{ $transaction->billing->consumer->meter_code }}</span>
-                        </div>
-                        <div class="payment-details">
-                            <span class="payment_title">Previous</span>
-                            <span class="payment_info">{{ $transaction->billing->previos }}</span>
-                        </div>
-                        <div class="payment-details">
-                            <span class="payment_title">Current</span>
-                            <span class="payment_info">{{ $transaction->billing->current }}</span>
-                        </div>
-                        <div class="payment-details consumption">
-                            <span class="payment_title">Total Consumption</span>
-                            <span class="payment_info">{{ $transaction->billing->total_consumption }}</span>
-                        </div>
-
-                        <div class="payment-details">
-                            <span class="payment_title">Water Bill</span>
-                            <span class="payment_info">{{ $transaction->billing->price }}</span>
-                        </div>
-                        <div class="payment-details">
-                            <span class="payment_title">Source Charge</span>
-                            <span class="payment_info">20</span>
-                        </div>
-                        <div class="payment-details">
-                            <span class="payment_title">Total Amount Due</span>
-                            <span class="payment_info">{{ $transaction->billing->total }}</span>
-                        </div>
-                        <div class="payment-details">
-                            <span class="payment_title">Penalty After Due</span>
-                            <span class="payment_info">{{ intval($result) === 0 ? 50 : intval($result) * 50 }}</span>
-                        </div>
-                        <div class="payment-details"
-                            style="border-bottom: 2px solid black; padding-bottom: 8px; margin-bottom: 12px">
-                            <span class="payment_title">Total Amount After Due</span>
-                            {{-- <span class="payment_info">{{ $transaction->billing->after_due }}</span> --}}
-                            @if (intval($result) === 0)
-                                <span class="payment_info"> {{ $transaction->billing->after_due }}
-                                </span>
-                            @else
-                                <span class="payment_info">{{ number_format($payment, 2) }}
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="payment-details">
-                            <span class="payment_title">Money</span>
-                            <span class="payment_info">{{ $transaction->billing->money }}</span>
-                        </div>
-                        <div class="payment-details">
-                            <span class="payment_title">Change</span>
-                            <span class="payment_info">{{ $transaction->billing->change }}</span>
-                        </div>
-                    </div>
+    <table class="zui-table">
+        <thead>
+            <tr>
+                <th>Meter No.</th>
+                <th>Billing No.</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Date Paid</th>
+                <th>Month Paid</th>
+                <th>Cashier Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if ($transactions->isEmpty())
+                <div>
+                    <p>No Reports Found</p>
                 </div>
-            </section>
-        @endif
-    @endforeach
+            @else
+                @foreach ($transactions as $transaction)
+                    @php
+                        $paid_at = Carbon\Carbon::parse($transaction->billing->paid_at);
+                    @endphp
+                    <tr class="text clickable-tr " data-href="/transaction/print/{{ $transaction->billing->id }}"
+                        style="cursor: pointer;">
+                        <td>{{ $transaction->billing->consumer->meter_code }}</td>
+                        <td>{{ sprintf('%07d', $transaction->billing->id) }}</td>
+                        <td>{{ $transaction->billing->consumer->first_name }}
+                            {{ $transaction->billing->consumer->last_name }}</td>
+                        <td>{{ $transaction->billing->consumer->street }},
+                            {{ $transaction->billing->consumer->barangay }}</td>
+                        <td>{{ $paid_at->format('F j, Y') }}
+                        </td>
+                        <td>{{ $paid_at->format('F') }}
+                        </td>
+                        <td>{{ $transaction->cashier->first_name }}
+                            {{ $transaction->cashier->last_name }}</td>
+                    </tr>
+                @endforeach
+            @endif
+        </tbody>
+    </table>
     <div class="printBtn">
         <a href="/all/transactions" id="back">Back</a>
         <button id="printBtn" onclick="window.print()">Print</button>
