@@ -178,7 +178,6 @@
             <thead>
                 <tr>
                     <th>Meter No.</th>
-                    <th>Billing No.</th>
                     <th>Name</th>
                     <th>Address</th>
                     <th>Date Paid</th>
@@ -199,7 +198,6 @@
                         <tr class="text clickable-tr " data-href="/transaction/print/{{ $transaction->billing->id }}"
                             style="cursor: pointer;">
                             <td>{{ $transaction->billing->consumer->meter_code }}</td>
-                            <td>{{ sprintf('%07d', $transaction->billing->id) }}</td>
                             <td>{{ $transaction->billing->consumer->first_name }}
                                 {{ $transaction->billing->consumer->last_name }}</td>
                             <td>{{ $transaction->billing->consumer->street }},

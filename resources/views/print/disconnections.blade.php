@@ -178,7 +178,6 @@
             <thead>
                 <tr>
                     <th>Meter No.</th>
-                    <th>Billing No.</th>
                     <th>Name</th>
                     <th>Address</th>
                     <th>Last Month Paid</th>
@@ -214,7 +213,6 @@
                         data-href="{{ $billing->status == 'PENDING' ? "/billing/print/$billing->id" : "/transaction/print/$billing->id" }}"
                         style="cursor: pointer;">
                         <td>{{ $billing->consumer->meter_code }}</td>
-                        <td>{{ sprintf('%07d', $billing->id) }}</td>
                         <td>{{ $billing->consumer->first_name }}
                             {{ $billing->consumer->last_name }}</td>
                         <td>{{ $billing->consumer->street }},
