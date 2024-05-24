@@ -153,14 +153,14 @@ Route::middleware([AdminOrCollector::class, 'auth'])->group(function () {
     Route::post('billing/pay/{billing_id}', [BillingController::class, 'pay']);
 
     Route::get('billing/print/{billing_id}', [BillingController::class, 'print']);
-    Route::get('billings/print/receipts/{month}/{year}/{status}/{search}', [BillingController::class, 'printAll']);
+    Route::get('billings/print/receipts/{month}/{year}/{status}/{search}/{from}/{to}', [BillingController::class, 'printAll']);
     Route::get('all/billings', [BillingController::class, 'all']);
     Route::get('billing/disconnections/print', [BillingController::class, 'print_disconnection']);
 
     Route::get('all/transactions', [TransactionController::class, 'all']);
     Route::get('transactions/search/{search}', [TransactionController::class, 'search']);
     Route::get('transaction/print/{id}', [TransactionController::class, 'print']);
-    Route::get('transactions/print/{year}/{month}', [TransactionController::class, 'prints']);
+    Route::get('transactions/print/{year}/{month}/{from}/{to}', [TransactionController::class, 'prints']);
 
     // Route::get('transactions/search', [TransactionController::class, 'all_search']);
 

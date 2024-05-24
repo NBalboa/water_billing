@@ -39,6 +39,15 @@ class TransactionController extends Controller
                 });
             }
 
+            if (request()->has("from") && request()->from != null && request()->has('to') && request()->to != null) {
+                $transaction_start =
+                    Carbon::createFromFormat('Y-m-d', request()->from)->startOfDay();
+                $transaction_end = Carbon::createFromFormat('Y-m-d', request()->to)->endOfDay();
+                $transactions->whereHas('billing', function ($query) use ($transaction_start, $transaction_end) {
+                    $query->whereBetween('paid_at', [$transaction_start, $transaction_end]);
+                });
+            }
+
             $transactions = $transactions->get();
         } else {
             if (request()->has("month") && request()->month != null) {
@@ -52,6 +61,15 @@ class TransactionController extends Controller
                 $year = request()->year;
                 $transactions->whereHas('billing', function ($query) use ($year) {
                     $query->whereYear('paid_at', $year);
+                });
+            }
+
+            if (request()->has("from") && request()->from != null && request()->has('to') && request()->to != null) {
+                $transaction_start =
+                    Carbon::createFromFormat('Y-m-d', request()->from)->startOfDay();
+                $transaction_end = Carbon::createFromFormat('Y-m-d', request()->to)->endOfDay();
+                $transactions->whereHas('billing', function ($query) use ($transaction_start, $transaction_end) {
+                    $query->whereBetween('paid_at', [$transaction_start, $transaction_end]);
                 });
             }
 
@@ -78,7 +96,7 @@ class TransactionController extends Controller
     }
 
 
-    public function prints($year, $month)
+    public function prints($year, $month, $from, $to)
     {
         $transactions = Transaction::with('billing', 'cashier');
 
@@ -91,6 +109,15 @@ class TransactionController extends Controller
         if ($month !== "blank") {
             $transactions->whereHas('billing', function ($query) use ($month) {
                 $query->whereMonth('paid_at', $month);
+            });
+        }
+
+        if ($from !== "blank" && $to !== "blank") {
+            $transaction_start =
+                Carbon::createFromFormat('Y-m-d', request()->from)->startOfDay();
+            $transaction_end = Carbon::createFromFormat('Y-m-d', request()->to)->endOfDay();
+            $transactions->whereHas('billing', function ($query) use ($transaction_start, $transaction_end) {
+                $query->whereBetween('paid_at', [$transaction_start, $transaction_end]);
             });
         }
 

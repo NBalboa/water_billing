@@ -59,14 +59,17 @@ class BillingController extends Controller
         return back();
     }
 
-    public function printAll($month, $year, $status, $search)
+    public function printAll($month, $year, $status, $search, $from, $to)
     {
         $attributes = [
             'month' => $month == 'blank' ? null : $month,
             'year' => $year == 'blank' ? null : $year,
             'status' => $status == 'blank' ? null : $status,
             'search' => $search == 'blank' ? null : $search,
+            'from' => $from == 'blank' ? null : $from,
+            'to' => $to == 'blank' ? null : $to,
         ];
+
         if ($attributes) {
             $billings = Billing::with('consumer');
             if ($attributes['search'] && request()->search != null) {
@@ -86,6 +89,12 @@ class BillingController extends Controller
                                     $query->where('status', $attributes['status'] == 'pending' ? 'PENDING' : 'PAID');
                                 }
                             }
+
+                            if ($attributes['from'] && $attributes['from'] != null && $attributes['to'] && $attributes != null) {
+                                $billing_start = Carbon::createFromFormat('Y-m-d', $attributes['from'])->startOfDay();
+                                $billing_end = Carbon::createFromFormat('Y-m-d', $attributes['to'])->endOfDay();
+                                $query->whereBetween('created_at', [$billing_start, $billing_end]);
+                            }
                             $query->whereAny(['meter_code', 'first_name', 'last_name'], 'LIKE', '%' . $search . '%');
                         });
                     });
@@ -102,6 +111,11 @@ class BillingController extends Controller
                     if ($attributes['status'] != 'on') {
                         $billings->where('status', $attributes['status'] == 'pending' ? 'PENDING' : 'PAID');
                     }
+                }
+                if ($attributes['from'] && $attributes['from'] != null && $attributes['to'] && $attributes != null) {
+                    $billing_start = Carbon::createFromFormat('Y-m-d', $attributes['from'])->startOfDay();
+                    $billing_end = Carbon::createFromFormat('Y-m-d', $attributes['to'])->endOfDay();
+                    $billings->whereBetween('created_at', [$billing_start, $billing_end]);
                 }
             }
             $billings = $billings->get();
@@ -170,6 +184,12 @@ class BillingController extends Controller
                                     $query->where('status', request()->status == 'pending' ? 'PENDING' : 'PAID');
                                 }
                             }
+
+                            if (request()->has('from') && request()->from != null && request()->has('to') && request()->to != null) {
+                                $billing_start = Carbon::createFromFormat('Y-m-d', request()->from)->startOfDay();
+                                $billing_end = Carbon::createFromFormat('Y-m-d', request()->to)->endOfDay();
+                                $query->whereBetween('created_at', [$billing_start, $billing_end]);
+                            }
                             $query->whereAny(['meter_code', 'first_name', 'last_name'], 'LIKE', '%' . $search . '%');
                         });
                     });
@@ -186,6 +206,12 @@ class BillingController extends Controller
                     if (request()->status != 'on') {
                         $billings->where('status', request()->status == 'pending' ? 'PENDING' : 'PAID');
                     }
+                }
+
+                if (request()->has('from') && request()->from != null && request()->has('to') && request()->to != null) {
+                    $billing_start = Carbon::createFromFormat('Y-m-d', request()->from)->startOfDay();
+                    $billing_end = Carbon::createFromFormat('Y-m-d', request()->to)->endOfDay();
+                    $billings->whereBetween('created_at', [$billing_start, $billing_end]);
                 }
             }
             $billings = $billings->get();

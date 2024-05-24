@@ -6,12 +6,11 @@
             <div class="container-fluid">
                 <p>Reports</p>
                 <div>
-                    <form method="GET" action="/all/billings">
-                        <div class="d-flex  align-items-center">
-                            <label for="month">Month</label>
-                            <div class="form-group mr-3 align-middle">
-                                <select name="month" value="{{ old('month') }} " class="mt-2">
-                                    <option value="">Select Year</option>
+                    <form method="GET" action="/all/billings" class="mb-2">
+                        <div class="form-group row">
+                            <div class="col-sm-2">
+                                <select name="month" value="{{ old('month') }}" class="custom-select">
+                                    <option value="">Select Month</option>
                                     @for ($i = 1; $i <= 12; $i++)
                                         <option value="{{ $i }}">
                                             {{ $month = date('F', mktime(0, 0, 0, $i, 1, date('Y'))) }}
@@ -19,33 +18,63 @@
                                     @endfor
                                 </select>
                             </div>
-                            <div class="form-group mr-2">
-                                <label for="year" class="mt-3">Year</label>
-                                <select name="year" class="mt-3">
+                            <div class="col-sm-2">
+                                <select name="year" class="custom-select">
                                     <option value="">Select Year</option>
                                     @foreach ($years as $year)
                                         <option value="{{ $year->year }}">{{ $year->year }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group mt-3">
-                                <input type="radio" name="status" id="all" checked />
-                                <label for="all" class="mr-2">All</label>
+                            <div class="col-sm-3 ">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input " type="radio" name="status" id="all" checked />
+                                    <label for="all" class="form-check-label">All</label>
+                                </div>
+                                <div class="form-check form-check-inline">
 
-                                <input type="radio" name="status" value="pending" id="pending" />
-                                <label for="pending " class="mr-2">Pending</label>
-
-                                <input type="radio" name="status" value="paid" id="paid" />
-                                <label for="paid" class="mr-2">Paid</label>
-                            </div>
-                            <div class="form-group mr-2 mt-2">
-                                <input type="text" name="search" placeholder="Search ..." id="billing_search" />
-                            </div>
-
-                            <div class="form-group mt-2">
-                                <input type="submit" value="Search" class="btn btn-info">
+                                    <input class="form-check-input" type="radio" name="status" value="pending"
+                                        id="pending" />
+                                    <label for="pending " class="form-check-label">Pending</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="status" value="paid"
+                                        id="paid" />
+                                    <label for="paid" class="form-check-label">Paid</label>
+                                </div>
                             </div>
                         </div>
+                        <div class="form-row align-items-center">
+                            <div class="col-auto ">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="from" class="col-form-label">From:</label>
+                                    </div>
+                                    <div class="col">
+                                        <input type="date" name="from" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="to" class="col-form-label">To:</label>
+                                    </div>
+                                    <div class="col">
+                                        <input type="date" name="to" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-auto">
+                                <input type="text" name="search" placeholder="Search ..." id="billing_search"
+                                    class="form-control align-bottom" />
+                            </div>
+                            <div class="col-auto">
+                                <input type="submit" value="Search" class="btn btn-info" style="width:100px;">
+                            </div>
+                        </div>
+
                     </form>
 
                 </div>
@@ -60,9 +89,11 @@
                     $year = request()->query('year');
                     $status = request()->query('status');
                     $search = request()->query('search');
+                    $from = request()->query('from');
+                    $to = request()->query('to');
                 @endphp
                 @if (!$billings->isEmpty())
-                    <a href="/billings/print/receipts/{{ $month == null ? 'blank' : $month }}/{{ $year == null ? 'blank' : $year }}/{{ $status == null ? 'blank' : $status }}/{{ $search == null ? 'blank' : $search }}"
+                    <a href="/billings/print/receipts/{{ $month == null ? 'blank' : $month }}/{{ $year == null ? 'blank' : $year }}/{{ $status == null ? 'blank' : $status }}/{{ $search == null ? 'blank' : $search }}/{{ $from == null || $to == null ? 'blank/blank' : "{$from}/${to}" }}"
                         class="btn btn-dark mb-2">Print</a>
                 @endif
                 <div class="card">
@@ -72,7 +103,6 @@
                             <thead>
                                 <tr>
                                     <th>Meter No.</th>
-                                    <th>Billing No.</th>
                                     <th>Name</th>
                                     <th>Address</th>
                                     <th>Last Month Paid</th>
@@ -81,9 +111,9 @@
                             </thead>
                             <tbody id="billing_result">
                                 @if ($billings->isEmpty())
-                                    <div>
-                                        <p>No Reports Found</p>
-                                    </div>
+                                    <tr>
+                                        <td>No Reports Found</td>
+                                    </tr>
                                 @else
                                     @foreach ($billings as $billing)
                                         @php
@@ -115,7 +145,6 @@
                                             data-href="{{ $billing->status == 'PENDING' ? "/billing/print/$billing->id" : "/transaction/print/$billing->id" }}"
                                             style="cursor: pointer;">
                                             <td>{{ $billing->consumer->meter_code }}</td>
-                                            <td>{{ sprintf('%07d', $billing->id) }}</td>
                                             <td>{{ $billing->consumer->first_name }}
                                                 {{ $billing->consumer->last_name }}</td>
                                             <td>{{ $billing->consumer->street }},

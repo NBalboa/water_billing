@@ -16,10 +16,8 @@
             <div class="mb-3">
                 <form method="GET" action="#">
                     <div class="d-flex  align-items-center">
-
                         <div class="form-group mr-3">
-                            <label for="month">Month</label>
-                            <select name="month" value="{{ old('month') }}">
+                            <select name="month" value="{{ old('month') }}" class="custom-select">
                                 <option value="">Select Month</option>
                                 @for ($i = 1; $i <= 12; $i++)
                                     <option value="{{ $i }}">
@@ -29,13 +27,34 @@
                             </select>
                         </div>
                         <div class="form-group mr-2">
-                            <label for="year">Year</label>
-                            <select name="year">
+                            <select name="year" class="custom-select">
                                 <option value="">Select Year</option>
                                 @foreach ($years as $year)
                                     <option value="{{ $year->year }}">{{ $year->year }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-row align-item-middle">
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="col-form-label">From:</label>
+                                </div>
+                                <div class="col">
+                                    <input type="date" name="from" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="col-form-label">To:</label>
+                                </div>
+                                <div class="col">
+                                    <input type="date" name="to" class="form-control" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="input-group input-group-sm" style="width: 100%;">
@@ -49,8 +68,12 @@
                     </div>
                 </form>
             </div>
+            @php
+                $from = request()->query('from');
+                $to = request()->query('to');
+            @endphp
             @if (!$transactions->isEmpty())
-                <a href="/transactions/print/{{ request()->year == null ? 'blank' : request()->year }}/{{ request()->month == null ? 'blank' : request()->month }}"
+                <a href="/transactions/print/{{ request()->year == null ? 'blank' : request()->year }}/{{ request()->month == null ? 'blank' : request()->month }}/{{ $from == null || $to == null ? 'blank/blank' : "{$from}/{$to}" }}"
                     class="btn btn-dark mb-2">Print</a>
             @endif
             <div class="card">
