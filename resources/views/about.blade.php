@@ -30,30 +30,68 @@
                         <li class="nav-item"><a class="nav-link" type="button" data-bs-target="#login"
                                 data-bs-toggle="modal">Login</a></li>
                     @endguest
+
                 </ul>
             </div>
         </div>
     </nav>
     <main class="page lanidng-page">
-        <section class="portfolio-block mobile-app">
-            <div class="container align-items-center">
-                <div class="row align-items-center">
-                    <div class="col-md-12 col-lg-3 offset-lg-2">
-                        <div class="portfolio-phone-mockup">
-                            <div class="phone-screen"
-                                style="background: url(&quot;assets/img/image1.png&quot;) center / contain no-repeat;">
-                            </div>
-                            <div class="home-button"></div>
+        <section>
+            <div class="container mt-2">
+                <h2>About</h2>
+                <p style="text-align: justify">
+                    This Water Billing Management System can be only accessed by the Management. The system requires the
+                    users to log in with their user credentials to gain access to the features and functionalities of
+                    the system. This project has 3 types of user roles which are the Admin, Collector and Cashier users.
+                    The Admin users have the privilege to access and manage all the features and functionalities on the
+                    system while the collector and cashier has only limited permissions. The system stores the
+                    consumer's basic information, and management can also list the billing history of the consumer. On
+                    the billing feature, the system automatically calculates the total amount bill of the consumer. The
+                    project also generates a printable Monthly Billing Report.
+                </p>
+            </div>
+
+            <div class="container">
+                <div class="row py-5 justify-content-center">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-2 mb-3">
+                        <img style="width: 100%; height: 150px" class="img-thumbnail" src="/assets/img/joyce_ann.jpg">
+                        <div class="mt-2">
+                            <h5 class="text-center mb-0">Joyce Ann Yalon</h5>
+                            <p class="text-center">Analyst</p>
                         </div>
                     </div>
-                    <div class="col-md-12 col-lg-5 text">
-                        <h3>Vincenzo Sagun Water Billing Management System (Web-Base) - VSWBMS</h3>
-                        <p>Researchers believe that the proposed web-based water billing system will contribute to the
-                            growth and improvement of Vincenzo Sagun Municipality's services to the community and its
-                            stakeholders.</p>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-2 mb-3">
+                        <img style="width: 100%; height: 150px" class="img-thumbnail" src="/assets/img/aisha.jpg">
+                        <div class="mt-2">
+                            <h5 class="text-center mb-0">Aisha Manto</h5>
+                            <p class="text-center">Analyst</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-2 mb-3">
+                        <img style="width: 100%; height: 150px" class="img-thumbnail" src="/assets/img/jovelyn.jpg">
+                        <div class="mt-2">
+                            <h5 class="text-center mb-0">Jovelyn Pamada</h5>
+                            <p class="text-center">Designer</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-2 mb-3">
+                        <img style="width: 100%; height: 150px" class="img-thumbnail" src="/assets/img/juvelyn.jpg" />
+                        <div class="mt-2">
+                            <h5 class="text-center mb-0">Juvelyn Chiong</h5>
+                            <p class="text-center">Manager</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-2 mb-3">
+                        <img style="width: 100%; height: 150px" class="img-thumbnail" src="/assets/img/mark.jpg">
+                        <div class="mt-2">
+                            <h5 class="text-center mb-0">Mark Bryn Bogol</h5>
+                            <p class="text-center">Programmer</p>
+                        </div>
                     </div>
                 </div>
             </div>
+
+
         </section>
     </main>
     <footer class="page-footer">
@@ -77,7 +115,8 @@
                     <form method="POST" action="/login">
                         @csrf
 
-                        <div class="text-center"><img class="mb-3" src="assets/img/image1.png" width="80"></div>
+                        <div class="text-center"><img class="mb-3" src="assets/img/image1.png" width="80">
+                        </div>
                         <div class="mb-3">
                             <label class="form-label" for="name">Username</label>
                             @error('username')
@@ -102,5 +141,3 @@
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/sweetalert.min.js"></script>
 </body>
-
-</html>

@@ -20,6 +20,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('login');
 
+Route::get('/about', function () {
+    return view('about');
+});
 // TODOS
 
 // user edit by admin or owner
