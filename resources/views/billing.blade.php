@@ -105,6 +105,7 @@
                                     <th>Meter No.</th>
                                     <th>Name</th>
                                     <th>Address</th>
+                                    <th>Date Paid</th>
                                     <th>Last Month Paid</th>
                                     <th>Total Amount</th>
                                 </tr>
@@ -139,6 +140,11 @@
                                                 ->where('status', 'PAID')
                                                 ->latest()
                                                 ->first();
+
+                                            $paid_at =
+                                                $billing->paid_at !== null
+                                                    ? Carbon\Carbon::parse($billing->paid_at)
+                                                    : '';
                                         @endphp
                                         <tr class=
                                         "text clickable-tr {{ intval($result) >= 8 && $billing->status === 'PENDING' ? 'text-danger' : 'text-dark' }}"
@@ -149,6 +155,12 @@
                                                 {{ $billing->consumer->last_name }}</td>
                                             <td>{{ $billing->consumer->street }},
                                                 {{ $billing->consumer->barangay }}</td>
+                                            @if ($billing->status === 'PAID')
+                                                <td>{{ $paid_at->format('F j, Y') }}
+                                                </td>
+                                            @else
+                                                <td></td>
+                                            @endif
                                             <td>{{ !$latest_date_paid ? '' : Carbon\Carbon::parse($latest_date_paid->paid_at)->format('F') }}
                                             </td>
                                             <td>{{ intval($result) === 0 ? $billing->total : number_format($payment, 2) }}
